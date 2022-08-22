@@ -14,6 +14,13 @@ export default class Validate {
       //return /^([0-9]{9})$/.test(value);
    }
 
+   static isValidDistrict(value: string) {
+      return [
+         'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
+         'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'
+      ].includes(value);
+   }
+
    static isFormCorrect(form: AssistanceForm): boolean {
 
       const requiredFields = [

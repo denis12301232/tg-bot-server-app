@@ -61,6 +61,8 @@ export default class AuthController {
    static async activate(request: Request, response: Response, next: NextFunction) {
       try {
          const activationLink = request.params.link;
+         console.log(activationLink);
+         
          await AuthService.activate(activationLink);
 
          return response.redirect(<string>process.env.CLIENT_URL);

@@ -34,7 +34,7 @@ export default class AssistanceController {
          }
 
          const forms = await AssistanceService.sendAssistanceForm(surname, name, patronymic);
-         
+
          return response.json(new AssistanceFormDto(forms));
       } catch (e) {
          next(e);
@@ -89,7 +89,17 @@ export default class AssistanceController {
 
    static async saveFormsToSheet(request: Request, response: Response, next: NextFunction) {
       try {
-         const result = await AssistanceService.saveFormsToSheet();
+         const { filter, query } = request.query;
+
+         if (!filter || !query) {
+            return next(ApiError.BadRequest('Неверный запрос!'));
+         }
+
+         if (typeof filter !== 'string' || typeof query !== 'string') {
+            return next(ApiError.BadRequest('Неверный запрос!'));
+         }
+
+         const result = await AssistanceService.saveFormsToSheet(filter, query);
          return response.json(result);
       } catch (e) {
          next(e);

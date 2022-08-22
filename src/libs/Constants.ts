@@ -2,13 +2,13 @@ export default class Constants {
 
    static readonly assistance = {
       name: {
-         display: 'ФИО',
+         display: 'Имя',
       },
       surname: {
-         display: 'ФИО',
+         display: 'Фамилия',
       },
       patronymic: {
-         display: 'ФИО',
+         display: 'Отчество',
       },
       phone: {
          display: 'Телефон',
@@ -17,16 +17,16 @@ export default class Constants {
          display: 'Дата рождения',
       },
       district: {
-         display: 'Адрес',
+         display: 'Район',
       },
       street: {
-         display: 'Адрес',
+         display: 'Улица/Проспект/Переулок',
       },
       house: {
-         display: 'Адрес',
+         display: 'Дом',
       },
       flat: {
-         display: 'Адрес',
+         display: 'Квартира',
       },
       people_num: {
          display: 'Число проживающих',
@@ -74,5 +74,10 @@ export default class Constants {
          display: 'Согласие на фото',
       },
    };
+
+   static readonly districts = [
+      'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
+      'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'
+   ];
 }
 

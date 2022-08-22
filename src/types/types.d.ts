@@ -17,5 +17,8 @@ declare namespace NodeJS {
       readonly GOOGLE_CLIENT_SECRET: string,
       readonly GOOGLE_REDIRECT_URL: string,
       readonly GOOGLE_REFRESH_TOKEN: string,
+      readonly GOOGLE_APP_PASS: string,
+      readonly GOOGLE_SERVICE_ACCOUNT_EMAIL: string,
+      readonly GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: string,
    }
 }

@@ -3,30 +3,29 @@ import { ITools } from "../interfaces/ITools";
 
 const { Schema, model } = mongoose;
 
-const ToolsSchema = new Schema<ITools>({
+const ToolsSchema = new Schema({
    api: {
       google: {
          user: {
             type: String,
+            default: '',
          },
-         sheetId: {
+         app_password: {
             type: String,
+            default: '',
          },
-         clientId: {
-            type: String
-         },
-         clientSecret: {
-            type: String,
-         },
-         redirectUrl: {
-            type: String,
-            default: 'https://developers.google.com/oauthplayground',
-         },
-         refreshToken: {
-            type: String,
-         },
+         service: {
+            user: {
+               type: String,
+               default: '',
+            },
+            privateKey:{
+               type: String,
+               default: '',
+            }
+         }
       }
    }
 });
 
-export default model<ITools>('Tools', ToolsSchema);
+export default model('Tools', ToolsSchema);

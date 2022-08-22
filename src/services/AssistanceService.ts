@@ -5,18 +5,19 @@ import { GoogleSpreadsheet } from "google-spreadsheet"
 import AssistanceFormDto from "../dtos/AssistanceFormDto";
 import Constants from "../libs/Constants";
 import { Obj } from "../interfaces/Obj";
+import ApiError from "../exeptions/ApiError";
+import Validate from "../libs/Validate";
 
 
 export default class AssistanceService {
    static async catchAssistaceForm(form: AssistanceForm) {
-      const user = await AssistanceModel.create(form);
-      return user;
+      const saved = await AssistanceModel.create(form)
+         .catch(e => { throw ApiError.BadRequest(e.message, e.errors) });
+      return saved;
    }
 
    static async sendAssistanceForm(surname: string, name: string, patronymic: string) {
-      const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 })
-      //Эльвира Зайцева Владимировна
-      //const form = await AssistanceModel.find({ fio }, { __v: 0 });
+      const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 });
       return form;
    }
 
@@ -25,7 +26,7 @@ export default class AssistanceService {
       const humansList = await AssistanceModel.find({}, { name: 1, surname: 1, patronymic: 1, _id: 1 })
          .skip(skip)
          .limit(limit);
-      
+
       const count: number = await AssistanceModel.count();
       return { humansList, count };
    }
@@ -36,43 +37,56 @@ export default class AssistanceService {
    }
 
    static async modifyAssistanceForm(id: string, form: AssistanceForm) {
-      const updateResult = await AssistanceModel.updateOne({ _id: id }, { $set: form });
+      const updateResult = await AssistanceModel.updateOne({ _id: id }, { $set: form }, { runValidators: true })
+         .catch(e => { throw ApiError.BadRequest(e.message, e.errors) });
       return updateResult;
    }
 
-   static async saveFormsToSheet() {
-      // const forms = await AssistanceModel.find();
-      // const OAuth2Client = GoogleApi.OAuth2Client();
-      // const doc = new GoogleSpreadsheet('1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo');
-      // doc.useOAuth2Client(OAuth2Client);
-      // await doc.loadInfo();
-      // const sheet = doc.sheetsByIndex[0];
-      // await sheet.clear();
-      // await sheet.loadCells('A1:S1');
+   static async saveFormsToSheet(filter: string, query: string) {
+      let forms;
 
-      // const allFields = Object.keys(Constants.assistance);
+      if (filter === 'all') {
+         forms = await AssistanceModel.find();
+      } else if (filter === 'district' && Validate.isValidDistrict(query)) {
+         forms = await AssistanceModel.find({ district: query });
+      } else {
+         throw ApiError.BadRequest('Неверный запрос!');
+      }
 
-      // allFields.forEach((item, index) => {
-      //    const cell = sheet.getCell(0, index);
-      //    cell.value = (<Obj>table)[item];
-      // });
-      // await sheet.saveUpdatedCells();
+      if (!forms.length) throw ApiError.BadRequest('Увы, ничего не найдено по запросу!');
 
-      // for (const item of forms) {
-      //    const sheetObj = allFields.reduce((obj, elem) => {
-      //       if (Array.isArray((<any>item)[elem])) {
-      //          obj[(<Obj>table)[elem]] = (<any>item)[elem].join(',');
-      //       } else if ((<any>item)[elem] === true) {
-      //          obj[(<Obj>table)[elem]] = 'Да';
-      //       } else if ((<any>item)[elem] === false) {
-      //          obj[(<Obj>table)[elem]] = 'Нет';
-      //       } else {
-      //          obj[(<Obj>table)[elem]] = (<any>item)[elem];
-      //       }
-      //       return obj;
-      //    }, <Obj>{});
-      //    await sheet.addRow(sheetObj);
-      // }
-      // return { message: "Success" };
+      const doc = new GoogleSpreadsheet('1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo');
+      await doc.useServiceAccountAuth({
+         client_email: GoogleApi.SERVICE_ACCOUNT_EMAIL,
+         private_key: GoogleApi.SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      });
+      await doc.loadInfo();
+      const sheet = doc.sheetsByIndex[0];
+      await sheet.clear();
+      await sheet.loadCells('A1:X1');
+      const allFields = Object.entries(Constants.assistance);
+      allFields.forEach(async ([key, value], index) => {
+         const cell = sheet.getCell(0, index);
+         cell.value = value.display;
+      });
+      await sheet.saveUpdatedCells();
+
+      for (const item of forms) {
+         const sheetObj = allFields.reduce((obj, [key, value]) => {
+            if (Array.isArray(item[key as keyof AssistanceForm])) {
+               obj[value.display] = (<string[]>item[key as keyof AssistanceForm])!.join(',');
+            } else if (item[key as keyof AssistanceForm] === true) {
+               obj[value.display] = 'Да';
+            } else if (item[key as keyof AssistanceForm] === false) {
+               obj[value.display] = 'Нет';
+            } else {
+               obj[value.display] = item[key as keyof AssistanceForm];
+            }
+            return obj;
+         }, <Obj>{});
+         await sheet.addRow(sheetObj);
+      }
+
+      return { message: "Success", link: `https://docs.google.com/spreadsheets/d/1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo` };
    }
 }

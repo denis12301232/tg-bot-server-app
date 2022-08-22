@@ -1,3 +1,3 @@
 export interface Obj{
-   [name: string]: string;
+   [name: string]: any;
 }

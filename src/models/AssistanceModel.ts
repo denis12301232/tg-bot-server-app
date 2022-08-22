@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { AssistanceForm } from "../interfaces/AssistanceForm";
+import Validate from "../libs/Validate";
 
 const { Schema, model } = mongoose;
 const AssistanceSchema = new Schema<AssistanceForm>({
@@ -18,14 +19,26 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    phone: {
       type: String,
       required: true,
+      validate: {
+         validator: Validate.isPhone,
+         message: (props) => `${props.value} is not a valid phone!`
+      }
    },
    birth: {
       type: String,
       required: true,
+      validate: {
+         validator: Validate.isDDMMYYYY,
+         message: (props) => `${props.value} is not a valid birth!`
+      }
    },
    district: {
       type: String,
       required: true,
+      validate: {
+         validator: Validate.isValidDistrict,
+         message: (props) => `${props.value} is not a valid district!`
+      }
    },
    street: {
       type: String,
@@ -46,6 +59,10 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    people_fio: {
       type: Array,
       default: [],
+      validate: {
+         validator: Array.isArray,
+         message: (props) => `${props.value} is not a valid type!`
+      }
    },
    invalids: {
       type: String,
@@ -58,6 +75,10 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    children_age: {
       type: Array,
       default: [],
+      validate: {
+         validator: Array.isArray,
+         message: (props) => `${props.value} is not a valid type!`
+      }
    },
    food: {
       type: String,
@@ -93,9 +114,11 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    },
    pers_data_agreement: {
       type: Boolean,
+      required: true,
    },
    photo_agreement: {
       type: Boolean,
+      required: true,
    }
 });
 

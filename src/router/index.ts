@@ -22,11 +22,13 @@ router.post('/auth/registration',
 router.get('/activate/:link', AuthController.activate);
 
 //-------------------------------AssistanceController----------------------------
-router.post('/assistance', body('form').custom(Validate.isFormCorrect), AssistanceController.catchAssistaceForm);
+router.post('/assistance', AssistanceController.catchAssistaceForm);
+//, body('form').custom(Validate.isFormCorrect)
 router.post('/assistance/info', AssistanceController.sendAssistanceForm);
 router.get('/assistance/list', AssistanceController.sendHumansList);
 router.delete('/assistance/delete/human', AssistanceController.deleteHuman);
-router.patch('/assistance/modify/form', body('form').custom(Validate.isFormCorrect), AssistanceController.modifyAssistanceForm);
+router.patch('/assistance/modify/form', AssistanceController.modifyAssistanceForm);
+//body('form').custom(Validate.isFormCorrect)
 router.get('/assistance/sheet', AssistanceController.saveFormsToSheet)
 
 //-------------------------------ToolsController----------------------------

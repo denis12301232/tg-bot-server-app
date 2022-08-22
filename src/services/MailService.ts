@@ -1,16 +1,20 @@
 import nodemailer, { TransportOptions } from 'nodemailer'
 import GoogleApi from "../libs/GoogleApi"
-
+import ToolsModel from '../models/ToolsModel'
 
 export default class MailService {
    static readonly transport = nodemailer.createTransport(<TransportOptions>{
       service: 'gmail',
+      // auth: {
+      //    type: 'OAuth2',
+      //    user: GoogleApi.USER,
+      //    clientId: GoogleApi.CLIENT_ID,
+      //    clientSecret: GoogleApi.CLIENT_SECRET,
+      //    refreshToken: GoogleApi.REFRESH_TOKEN,
+      // }
       auth: {
-         type: 'OAuth2',
          user: GoogleApi.USER,
-         clientId: GoogleApi.CLIENT_ID,
-         clientSecret: GoogleApi.CLIENT_SECRET,
-         refreshToken: GoogleApi.REFRESH_TOKEN,
+         pass: GoogleApi.APP_PASS,
       }
    });
 
