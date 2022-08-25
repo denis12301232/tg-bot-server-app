@@ -87,6 +87,6 @@ export default class AssistanceService {
          await sheet.addRow(sheetObj);
       }
 
-      return { message: "Success", link: `https://docs.google.com/spreadsheets/d/1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo` };
+      return { message: "Успешно сформировано!", link: `https://docs.google.com/spreadsheets/d/1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo` };
    }
 }
