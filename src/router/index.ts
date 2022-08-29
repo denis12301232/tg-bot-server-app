@@ -17,18 +17,22 @@ router.post('/auth/registration',
     body('email').isEmail(),
     body('password').isLength({ min: 6, max: 20 }),
     body('name').isLength({ min: 1 }),
-    //body('username').custom(Validate.isUsername),
-    AuthController.registration);
+    AuthController.registration
+);
 router.get('/activate/:link', AuthController.activate);
+router.post('/restore/password', body('email').isEmail(), AuthController.restorePassword);
+router.post('/restore/password/new',
+    body('password').isLength({ min: 6, max: 20 }),
+    body('link').custom(Validate.required),
+    AuthController.setNewRestoredPassword
+);
 
 //-------------------------------AssistanceController----------------------------
 router.post('/assistance', AssistanceController.catchAssistaceForm);
-//, body('form').custom(Validate.isFormCorrect)
 router.post('/assistance/info', AssistanceController.sendAssistanceForm);
 router.get('/assistance/list', AssistanceController.sendHumansList);
 router.delete('/assistance/delete/human', AssistanceController.deleteHuman);
 router.patch('/assistance/modify/form', AssistanceController.modifyAssistanceForm);
-//body('form').custom(Validate.isFormCorrect)
 router.get('/assistance/sheet', AssistanceController.saveFormsToSheet)
 
 //-------------------------------ToolsController----------------------------

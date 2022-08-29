@@ -3,7 +3,7 @@ import UserDto from "../dtos/UserDto";
 import TokenModel from "../models/TokenModel";
 
 export default class TokenService {
-
+   
    static generateTokens(payload: UserDto) {
       const accessToken = jwt.sign(payload, <Secret>process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
       const refreshToken = jwt.sign(payload, <Secret>process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });

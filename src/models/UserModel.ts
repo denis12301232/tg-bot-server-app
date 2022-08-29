@@ -4,7 +4,6 @@ import { IUser } from "../interfaces/IUser";
 const { Schema, model } = mongoose;
 
 const UserSchema = new Schema<IUser>({
-
    email: {
       type: String,
       required: true,
@@ -14,14 +13,13 @@ const UserSchema = new Schema<IUser>({
       type: String,
       required: true,
    },
-   // username: {
-   //    type: String,
-   //    required: true,
-   //    unique: true,
-   // },
    password: {
       type: String,
       required: true,
+   },
+   isAdmin: {
+      type: Boolean,
+      default: false,
    },
    isActivated: {
       type: Boolean,
@@ -29,16 +27,7 @@ const UserSchema = new Schema<IUser>({
    },
    activationLink: {
       type: String,
-   },
-   isAdmin: {
-      type: Boolean,
-      default: false,
-   },
-   // name: {
-   //    type: String,
-   //    default: '',
-   // }
-
+   }
 });
 
 export default model<IUser>('User', UserSchema);

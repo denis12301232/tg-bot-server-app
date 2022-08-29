@@ -5,11 +5,11 @@ import MailService from "./MailService";
 import TokenService from "./TokenService";
 import UserModel from "../models/UserModel";
 import ApiError from "../exeptions/ApiError";
+import RestoreModel from "../models/RestoreModel";
 
 export default class AuthService {
 
    static async registration(email: string, password: string, name: string) {
-
       const candidate = await UserModel.findOne({ email });
 
       if (candidate) {
@@ -93,5 +93,56 @@ export default class AuthService {
       await TokenService.saveToken(userDto.id, tokens.refreshToken);
 
       return { ...tokens, user: userDto };
+   }
+
+   static async restorePassword(email: string) {
+      const link = v4();
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+         throw ApiError.BadRequest(`Неверный email!`, ["email"]);
+      }
+
+      const restoreData = await RestoreModel.findOne({ user: user._id });
+      const dateNow = new Date;
+
+      if (restoreData) {
+         restoreData.restoreLink = link;
+         restoreData.createdAt = dateNow;
+         await restoreData.save();
+      } else {
+         await RestoreModel.create({ user: user._id, restoreLink: link, createdAt: dateNow });
+      }
+
+      await MailService.sendRestoreMail(email, `${process.env.API_URL}/restore?link=${link}`)
+         .catch(e => console.log(e.message));
+
+      return `На ваш адрес ${email} отправлено письмо со ссылкой. Перейдите по ней для смены пароля.`;
+   }
+
+   static async setNewRestoredPassword(password: string, link: string) {
+      const restoreData = await RestoreModel.findOne({ restoreLink: link });
+
+      if (!restoreData) {
+         throw ApiError.BadRequest('Срок действия ссылки истек.');
+      }
+
+      const date = new Date;
+
+      if ((+date - +restoreData.createdAt) > 6048e5) {
+         throw ApiError.BadRequest('Срок действия ссылки истек.');
+      }
+
+      const hashPassword: string = await bcrypt.hash(password, 5);
+      const userData = await UserModel.findById(restoreData.user);
+
+      if (!userData) {
+         throw ApiError.BadRequest('Срок действия ссылки истек.');
+      }
+      userData.password = hashPassword;
+      await userData.save();
+      await restoreData.delete();
+
+      return 'Пароль изменен. Используйте его для входа.';
    }
 }

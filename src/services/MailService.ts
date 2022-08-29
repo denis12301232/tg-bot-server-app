@@ -32,4 +32,19 @@ export default class MailService {
                 `
       });
    }
+
+   static async sendRestoreMail(to: string, link: string): Promise<void> {
+      await this.transport.sendMail({
+         from: GoogleApi.USER,
+         to,
+         subject: `Восстановление пароля на сайте ${process.env.API_URL}`,
+         text: '',
+         html: `
+                <div>
+                    <h1>Для восстановления перейдите по ссылке:</h1>
+                    <a href="${link}">${link}</a>
+                </div>
+                `
+      })
+   }
 }

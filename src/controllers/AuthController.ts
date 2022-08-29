@@ -61,8 +61,6 @@ export default class AuthController {
    static async activate(request: Request, response: Response, next: NextFunction) {
       try {
          const activationLink = request.params.link;
-         console.log(activationLink);
-         
          await AuthService.activate(activationLink);
 
          return response.redirect(<string>process.env.CLIENT_URL);
@@ -82,6 +80,42 @@ export default class AuthController {
          });
 
          return response.json(userData);
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async restorePassword(request: Request, response: Response, next: NextFunction) {
+      try {
+         const errors = validationResult(request);
+
+         if (!errors.isEmpty()) {
+            return next(ApiError.BadRequest('Ошибка валидации!', errors.array()));
+         }
+
+         const { email } = request.body;
+         const message = await AuthService.restorePassword(email);
+
+         return response.json({ message });
+
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async setNewRestoredPassword(request: Request, response: Response, next: NextFunction) {
+      try {
+         const errors = validationResult(request);
+
+         if (!errors.isEmpty()) {
+            return next(ApiError.BadRequest('Ошибка валидации!', errors.array()));
+         }
+
+         const { password, link } = request.body;
+         const message = await AuthService.setNewRestoredPassword(password, link);
+
+         return response.json({ message });
+
       } catch (e) {
          next(e);
       }
