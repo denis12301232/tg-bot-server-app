@@ -115,10 +115,18 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    pers_data_agreement: {
       type: Boolean,
       required: true,
+      validate: {
+         validator: (value: boolean) => value === true,
+         message: (props) => `Согласие на обработку данных обязательно!`
+      }
    },
    photo_agreement: {
       type: Boolean,
       required: true,
+      validate: {
+         validator: (value: boolean) => value === true,
+         message: (props) => `Согласие на фото обязательно!`
+      }
    }
 });
 

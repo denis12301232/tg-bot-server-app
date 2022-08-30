@@ -1,20 +1,14 @@
 import { Request, Response, NextFunction } from "express"
-import { validationResult } from "express-validator"
 import ApiError from "../exeptions/ApiError"
 import AssistanceService from "../services/AssistanceService"
 import HumansListDto from "../dtos/HumansListDto"
 import AssistanceFormDto from "../dtos/AssistanceFormDto"
 
+
 export default class AssistanceController {
 
    static async catchAssistaceForm(request: Request, response: Response, next: NextFunction) {
       try {
-         const errors = validationResult(request);
-
-         if (!errors.isEmpty()) {
-            return next(ApiError.BadRequest('Ошибка валидации формы!', errors.array()));
-         }
-
          const saved = await AssistanceService.catchAssistaceForm(request.body.form)
 
          return response.json({ message: "Успешно сохранено!", saved });
@@ -25,8 +19,6 @@ export default class AssistanceController {
 
    static async sendAssistanceForm(request: Request, response: Response, next: NextFunction) {
       try {
-         //const fio = request.body.fio;
-
          const { name, surname, patronymic } = request.body;
 
          if (!name || !surname || !patronymic) {
@@ -71,10 +63,6 @@ export default class AssistanceController {
 
    static async modifyAssistanceForm(request: Request, response: Response, next: NextFunction) {
       try {
-         const errors = validationResult(request);
-         if (!errors.isEmpty()) {
-            return next(ApiError.BadRequest('Ошибка валидации формы!', errors.array()));
-         }
          const { form, id } = request.body;
          if (!form || !id) {
             return next(ApiError.BadRequest('Отсутсвует тело запроса!'));
