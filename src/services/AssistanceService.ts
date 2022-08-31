@@ -2,11 +2,11 @@ import AssistanceModel from "../models/AssistanceModel";
 import { AssistanceForm } from "../interfaces/AssistanceForm";
 import GoogleApi from "../libs/GoogleApi"
 import { GoogleSpreadsheet } from "google-spreadsheet"
-import AssistanceFormDto from "../dtos/AssistanceFormDto";
 import Constants from "../libs/Constants";
 import { Obj } from "../interfaces/Obj";
 import ApiError from "../exeptions/ApiError";
 import Validate from "../libs/Validate";
+import ToolsModel from "../models/ToolsModel";
 
 
 export default class AssistanceService {
@@ -43,6 +43,12 @@ export default class AssistanceService {
    }
 
    static async saveFormsToSheet(filter: string, query: string) {
+      const api = await ToolsModel.find().limit(1);
+
+      if (!api.length) {
+         return { message: "Интеграция не настроена!", link: `` };
+      }
+
       let forms;
 
       if (filter === 'all') {
@@ -55,10 +61,10 @@ export default class AssistanceService {
 
       if (!forms.length) throw ApiError.BadRequest('Увы, ничего не найдено по запросу!');
 
-      const doc = new GoogleSpreadsheet('1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo');
+      const doc = new GoogleSpreadsheet(api[0].api.google.service.sheetId);
       await doc.useServiceAccountAuth({
-         client_email: GoogleApi.SERVICE_ACCOUNT_EMAIL,
-         private_key: GoogleApi.SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+         client_email: api[0].api.google.service.user,
+         private_key: api[0].api.google.service.privateKey,
       });
       await doc.loadInfo();
       const sheet = doc.sheetsByIndex[0];

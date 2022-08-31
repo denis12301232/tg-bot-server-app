@@ -3,7 +3,7 @@ import { ITools } from "../interfaces/ITools";
 
 const { Schema, model } = mongoose;
 
-const ToolsSchema = new Schema({
+const ToolsSchema = new Schema<ITools>({
    api: {
       google: {
          user: {
@@ -22,10 +22,14 @@ const ToolsSchema = new Schema({
             privateKey:{
                type: String,
                default: '',
+            },
+            sheetId: {
+               type: String,
+               default: '',
             }
          }
       }
-   }
+   },
 });
 
-export default model('Tools', ToolsSchema);
+export default model<ITools>('Tools', ToolsSchema);

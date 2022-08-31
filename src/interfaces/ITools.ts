@@ -6,6 +6,7 @@ export interface ITools {
          readonly service: {
             user: string,
             privateKey: string,
+            sheetId: string,
          }
       }
    }

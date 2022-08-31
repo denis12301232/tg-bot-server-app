@@ -1,6 +1,7 @@
 import ApiError from "../exeptions/ApiError";
 import UserModel from "../models/UserModel";
 import bcrypt from "bcrypt";
+import ToolsModel from "../models/ToolsModel";
 
 
 export default class ToolsService {
@@ -46,5 +47,29 @@ export default class ToolsService {
       await user.save();
 
       return user;
+   }
+
+   static async setGoogleServiceAccountSettings(serviceUser: string, servicePrivateKey: string, sheetId: string) {
+      const api = await ToolsModel.find().limit(1);
+      if (!api.length) {
+         const response = await ToolsModel.create({
+            api: {
+               google: {
+                  service: {
+                     user: serviceUser,
+                     privateKey: servicePrivateKey,
+                     sheetId: sheetId,
+                  }
+               }
+            }
+         });
+         return response;
+      } else {
+         api[0]!.api!.google!.service!.user = serviceUser;
+         api[0]!.api!.google!.service!.privateKey = servicePrivateKey.replace(/\\n/g, '\n');
+         api[0]!.api!.google!.service!.sheetId = sheetId;
+         const response = await api[0].save();
+         return response;
+      }
    }
 }

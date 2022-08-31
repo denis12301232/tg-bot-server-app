@@ -48,10 +48,27 @@ export default class ToolsController {
          }
 
          const { newPassword, oldPassword } = request.body;
-         const { id } = <Payload>request.user; 
+         const { id } = <Payload>request.user;
          const user = await ToolsService.setNewPassword(id, newPassword, oldPassword);
-         
-         return response.json({user: new UserDto(user)});
+
+         return response.json({ user: new UserDto(user) });
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async setGoogleServiceAccountSettings(request: Request, response: Response, next: NextFunction) {
+      try {
+         const { serviceUser, servicePrivateKey, sheetId } = request.body;
+
+         if (!serviceUser || !servicePrivateKey || !sheetId) {
+            return next(ApiError.BadRequest('Неверный запрос'));
+         }
+
+         const result = await ToolsService.setGoogleServiceAccountSettings(serviceUser, servicePrivateKey, sheetId);
+
+         return response.json({ message: 'Сохранено!' });
+
       } catch (e) {
          next(e);
       }

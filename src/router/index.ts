@@ -44,5 +44,6 @@ router.patch('/tools/password',
     body('newPassword').isLength({ min: 6, max: 20 }),
     ToolsController.setNewPassword
 );
+router.post('/tools/google/service', AuthMiddleware, ToolsController.setGoogleServiceAccountSettings);
 
 export default router;
