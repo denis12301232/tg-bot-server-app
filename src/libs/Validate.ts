@@ -21,6 +21,10 @@ export default class Validate {
       ].includes(value);
    }
 
+   static isYearInterval(value: string): boolean {
+      return /^\d{4}-\d{4}$/.test(value);
+   }
+
    static isFormCorrect(form: AssistanceForm): boolean {
 
       const requiredFields = [
