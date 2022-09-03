@@ -57,24 +57,22 @@ export default class AssistanceService {
       } else if (filter === 'district' && Validate.isValidDistrict(query)) {
          forms = await AssistanceModel.find({ district: query });
       } else if (filter === 'birth' && Validate.isYearInterval(query)) {
-         forms = await AssistanceModel.find(<any>`this.birth >= ${+query.split('-')[0]} && this.birth <= ${+query.split('-')[1]}`);
-            
-         // forms = await AssistanceModel.aggregate([{
-         //    $match: {
-         //       $expr: {
-         //          $function: {
-         //             body: function (birth: string, query: string) {
-         //                const year = +birth.split('-')[0];
-         //                const min = +query.split('-')[0];
-         //                const max = +query.split('-')[1];
-         //                return year >= min && year <= max;
-         //             },
-         //             args: ["$birth", query],
-         //             lang: "js"
-         //          }
-         //       }
-         //    }
-         // }]);
+         forms = await AssistanceModel.aggregate([{
+            $match: {
+               $expr: {
+                  $function: {
+                     body: function (birth: string, query: string) {
+                        const year = +birth.split('-')[0];
+                        const min = +query.split('-')[0];
+                        const max = +query.split('-')[1];
+                        return year >= min && year <= max;
+                     },
+                     args: ["$birth", query],
+                     lang: "js"
+                  }
+               }
+            }
+         }]);
       } else {
          throw ApiError.BadRequest('Неверный запрос!');
       }
