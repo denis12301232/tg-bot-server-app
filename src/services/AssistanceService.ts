@@ -7,6 +7,7 @@ import { Obj } from "../interfaces/Obj";
 import ApiError from "../exeptions/ApiError";
 import Validate from "../libs/Validate";
 import ToolsModel from "../models/ToolsModel";
+import { Types } from "mongoose";
 
 
 export default class AssistanceService {
@@ -49,29 +50,37 @@ export default class AssistanceService {
          return { message: "Интеграция не настроена!", link: `` };
       }
 
-      let forms;
+      let forms: Array<AssistanceForm & { _id: Types.ObjectId }>;
 
       if (filter === 'all') {
          forms = await AssistanceModel.find();
       } else if (filter === 'district' && Validate.isValidDistrict(query)) {
          forms = await AssistanceModel.find({ district: query });
       } else if (filter === 'birth' && Validate.isYearInterval(query)) {
-         forms = await AssistanceModel.aggregate([{
-            $match: {
-               $expr: {
-                  $function: {
-                     body: function (birth: string, query: string) {
-                        const year = +birth.split('-')[0];
-                        const min = +query.split('-')[0];
-                        const max = +query.split('-')[1];
-                        return year >= min && year <= max;
-                     },
-                     args: ["$birth", query],
-                     lang: "js"
-                  }
-               }
-            }
-         }]);
+         forms = await AssistanceModel.find({
+            $where: `function(){
+               const year = +this.birth.split('-')[0];
+               const min = +${query.split('-')[0]};
+               const max = +${query.split('-')[1]};
+               return year >= min && year <= max;
+            }`
+         });
+         // forms = await AssistanceModel.aggregate([{
+         //    $match: {
+         //       $expr: {
+         //          $function: {
+         //             body: function (birth: string, query: string) {
+         //                const year = +birth.split('-')[0];
+         //                const min = +query.split('-')[0];
+         //                const max = +query.split('-')[1];
+         //                return year >= min && year <= max;
+         //             },
+         //             args: ["$birth", query],
+         //             lang: "js"
+         //          }
+         //       }
+         //    }
+         // }]);
       } else {
          throw ApiError.BadRequest('Неверный запрос!');
       }
@@ -87,7 +96,7 @@ export default class AssistanceService {
       const sheet = doc.sheetsByIndex[0];
       await sheet.clear();
       await sheet.loadCells('A1:X1');
-      const allFields = Object.entries(Constants.assistance);
+      const allFields: Array<[any, { display: string }]> = Object.entries(Constants.assistance);
       allFields.forEach(async ([key, value], index) => {
          const cell = sheet.getCell(0, index);
          cell.value = value.display;
@@ -95,21 +104,24 @@ export default class AssistanceService {
       await sheet.saveUpdatedCells();
 
       for (const item of forms) {
-         const sheetObj = allFields.reduce((obj, [key, value]) => {
-            if (Array.isArray(item[key as keyof AssistanceForm])) {
-               obj[value.display] = (<string[]>item[key as keyof AssistanceForm])!.join(',');
-            } else if (item[key as keyof AssistanceForm] === true) {
+         const sheetObj = allFields.reduce((obj, [key, value]: [keyof AssistanceForm, { display: string }]) => {
+            if (Array.isArray(item[key])) {
+               obj[value.display] = (<string[]>item[key])!.join(',');
+            } else if (item[key] === true) {
                obj[value.display] = 'Да';
-            } else if (item[key as keyof AssistanceForm] === false) {
+            } else if (item[key] === false) {
                obj[value.display] = 'Нет';
             } else {
-               obj[value.display] = item[key as keyof AssistanceForm];
+               obj[value.display] = item[key];
             }
             return obj;
          }, <Obj>{});
          await sheet.addRow(sheetObj);
       }
 
-      return { message: "Успешно сформировано!", link: `https://docs.google.com/spreadsheets/d/1DZNbfsQsf9vF4E4_vXhH1xJlhEMS8Xrw7aTlMQhXNeo` };
+      return {
+         message: "Успешно сформировано!",
+         link: `https://docs.google.com/spreadsheets/d/${api[0].api.google.service.sheetId}`
+      };
    }
 }
