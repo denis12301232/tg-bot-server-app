@@ -57,7 +57,7 @@ export default class AssistanceService {
       } else if (filter === 'district' && Validate.isValidDistrict(query)) {
          forms = await AssistanceModel.find({ district: query });
       } else if (filter === 'birth' && Validate.isYearInterval(query)) {
-         forms = await AssistanceModel.find({ birth: { $gte: +query.split('-')[0], $lte: +query.split('-')[1] } });
+         forms = await AssistanceModel.find({ birth: { '$gte': +query.split('-')[0], '$lte': +query.split('-')[1] } });
          // forms = await AssistanceModel.aggregate([{
          //    $match: {
          //       $expr: {
