@@ -75,11 +75,45 @@ export default class ToolsController {
       }
    }
 
-   static async getUsers(request: Request, response: Response, next: NextFunction){
+   static async getUsers(request: Request, response: Response, next: NextFunction) {
       try {
          const users = await UserModel.find();
 
          return response.json(users);
+
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async giveAdminRights(request: Request, response: Response, next: NextFunction) {
+      try {
+         const { email } = request.body;
+
+         if (!email) {
+            return next(ApiError.BadRequest('Неверный запрос'));
+         }
+
+         const message = await ToolsService.giveAdminRights(email);
+
+         return response.json(message);
+
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async takeAdminRights(request: Request, response: Response, next: NextFunction) {
+      try {
+         const { email } = request.body;
+
+         if (!email) {
+            return next(ApiError.BadRequest('Неверный запрос'));
+         }
+
+         const message = await ToolsService.takeAdminRights(email);
+
+         return response.json(message);
          
       } catch (e) {
          next(e);

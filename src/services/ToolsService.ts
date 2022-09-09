@@ -72,4 +72,38 @@ export default class ToolsService {
          return response;
       }
    }
+
+   static async giveAdminRights(email: string) {
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+         throw ApiError.BadRequest('Пользователь не найден!');
+      }
+
+      if (user.roles.includes('admin')) {
+         throw ApiError.BadRequest('Пользователь уже администратор!');
+      }
+
+      user.roles.push('admin');
+      await user.save();
+
+      return { message: `Пользователь ${user.email} теперь администратор` };
+   }
+
+   static async takeAdminRights(email: string) {
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+         throw ApiError.BadRequest('Пользователь не найден!');
+      }
+
+      if (!user.roles.includes('admin')) {
+         throw ApiError.BadRequest('Пользователь и так не администратор!');
+      }
+
+      user.roles = user.roles.filter((item) => item !== 'admin');
+      await user.save();
+
+      return { message: `Пользователь ${user.email} теперь не администратор` };
+   }
 }

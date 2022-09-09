@@ -16,6 +16,9 @@ router.patch('/password',
     ToolsController.setNewPassword
 );
 router.post('/google/service', AuthMiddleware, RoleMiddleware(['admin']), ToolsController.setGoogleServiceAccountSettings);
+router.post('/giverights', AuthMiddleware, RoleMiddleware(['admin']), ToolsController.giveAdminRights);
+router.post('/takerights', AuthMiddleware, RoleMiddleware(['admin']), ToolsController.takeAdminRights);
 router.get('/users', AuthMiddleware, RoleMiddleware(['admin']), ToolsController.getUsers);
+
 
 export default router;
