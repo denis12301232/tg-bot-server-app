@@ -20,7 +20,7 @@ export default class AuthService {
       const activationLink: string = v4();
       const user = await UserModel.create({ email, password: hashPassword, activationLink, name });
 
-      await MailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`)
+      await MailService.sendActivationMail(email, `${process.env.API_URL}/api/auth/activate/${activationLink}`)
          .catch(e => console.log(e.message));
 
       const userDto = new UserDto(user);

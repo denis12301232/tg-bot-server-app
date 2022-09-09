@@ -17,16 +17,16 @@ const UserSchema = new Schema<IUser>({
       type: String,
       required: true,
    },
-   isAdmin: {
-      type: Boolean,
-      default: false,
-   },
    isActivated: {
       type: Boolean,
       default: false,
    },
    activationLink: {
       type: String,
+   },
+   roles: {
+      type: [String],
+      default: ['user']
    }
 });
 

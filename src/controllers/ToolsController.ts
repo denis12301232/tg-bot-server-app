@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express"
 import { Payload } from "../interfaces/Payload";
 import ToolsService from "../services/ToolsService";
 import UserDto from "../dtos/UserDto";
+import UserModel from "../models/UserModel";
 
 
 export default class ToolsController {
@@ -69,6 +70,17 @@ export default class ToolsController {
 
          return response.json({ message: 'Сохранено!' });
 
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async getUsers(request: Request, response: Response, next: NextFunction){
+      try {
+         const users = await UserModel.find();
+
+         return response.json(users);
+         
       } catch (e) {
          next(e);
       }
