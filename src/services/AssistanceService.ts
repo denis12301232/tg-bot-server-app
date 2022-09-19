@@ -1,13 +1,12 @@
-import AssistanceModel from "../models/AssistanceModel";
-import { AssistanceForm } from "../interfaces/AssistanceForm";
-import GoogleApi from "../libs/GoogleApi"
+import AssistanceModel from "@/models/AssistanceModel"
+import { AssistanceForm } from "@/interfaces/AssistanceForm"
 import { GoogleSpreadsheet } from "google-spreadsheet"
-import Constants from "../libs/Constants";
-import { Obj } from "../interfaces/Obj";
-import ApiError from "../exeptions/ApiError";
-import Validate from "../libs/Validate";
-import ToolsModel from "../models/ToolsModel";
-import { Types } from "mongoose";
+import Constants from "@/libs/Constants"
+import { Obj } from "@/interfaces/Obj"
+import ApiError from "@/exeptions/ApiError"
+import Validate from "@/libs/Validate"
+import ToolsModel from "@/models/ToolsModel"
+import { Types } from "mongoose"
 
 
 export default class AssistanceService {

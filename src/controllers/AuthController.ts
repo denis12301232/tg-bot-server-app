@@ -1,6 +1,6 @@
-import ApiError from "../exeptions/ApiError";
-import AuthService from "../services/AuthService";
-import { validationResult } from "express-validator";
+import ApiError from "@/exeptions/ApiError"
+import AuthService from "@/services/AuthService"
+import { validationResult } from "express-validator"
 import { Request, Response, NextFunction } from "express"
 
 

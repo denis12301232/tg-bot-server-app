@@ -1,8 +1,9 @@
 import { google } from 'googleapis'
-import { dirname } from 'path'
 import { config } from 'dotenv'
+//import { dirname } from 'path'
+//config({ path: dirname(require.main?.filename!) + '/.env' });
 
-config({ path: dirname(require.main?.filename!) + '/.env' });
+config();
 
 export default class GoogleApi {
    static readonly CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -18,14 +19,6 @@ export default class GoogleApi {
       const OAuth2Client = new google.auth.OAuth2(this.CLIENT_ID, this.CLIENT_SECRET, this.REDIRECT_URL);
       OAuth2Client.setCredentials({ refresh_token: this.REFRESH_TOKEN });
       return OAuth2Client;
-   }
-
-   static serviceAuth(scopes: Array<string>) {
-      const auth = new google.auth.GoogleAuth({
-         keyFile: './api/google-service.json',
-         scopes,
-      });
-      return auth;
    }
 }
 

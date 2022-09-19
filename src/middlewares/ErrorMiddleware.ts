@@ -1,5 +1,5 @@
-import ApiError from "../exeptions/ApiError";
-import { Request, Response, NextFunction } from "express";
+import ApiError from "@/exeptions/ApiError"
+import { Request, Response, NextFunction } from "express"
 
 export default function (e: Error, request: Request, response: Response, next: NextFunction) {
    console.log(e.message);

@@ -1,10 +1,13 @@
 import nodemailer, { TransportOptions } from 'nodemailer'
-import GoogleApi from "../libs/GoogleApi"
-import ToolsModel from '../models/ToolsModel'
+import GoogleApi from '@/libs/GoogleApi'
 
 export default class MailService {
    static readonly transport = nodemailer.createTransport(<TransportOptions>{
       service: 'gmail',
+      auth: {
+         user: GoogleApi.USER,
+         pass: GoogleApi.APP_PASS,
+      }
       // auth: {
       //    type: 'OAuth2',
       //    user: GoogleApi.USER,
@@ -12,10 +15,6 @@ export default class MailService {
       //    clientSecret: GoogleApi.CLIENT_SECRET,
       //    refreshToken: GoogleApi.REFRESH_TOKEN,
       // }
-      auth: {
-         user: GoogleApi.USER,
-         pass: GoogleApi.APP_PASS,
-      }
    });
 
    static async sendActivationMail(to: string, link: string): Promise<void> {
@@ -45,6 +44,6 @@ export default class MailService {
                     <a href="${link}">${link}</a>
                 </div>
                 `
-      })
+      });
    }
 }

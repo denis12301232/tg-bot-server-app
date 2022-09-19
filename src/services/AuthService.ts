@@ -1,11 +1,12 @@
-import { v4 } from "uuid";
-import bcrypt from "bcrypt";
-import UserDto from "../dtos/UserDto";
-import MailService from "./MailService";
-import TokenService from "./TokenService";
-import UserModel from "../models/UserModel";
-import ApiError from "../exeptions/ApiError";
-import RestoreModel from "../models/RestoreModel";
+import { v4 } from "uuid"
+import bcrypt from "bcrypt"
+import UserDto from "@/dtos/UserDto"
+import MailService from "./MailService"
+import TokenService from "./TokenService"
+import UserModel from "@/models/UserModel"
+import ApiError from "@/exeptions/ApiError"
+import RestoreModel from "@/models/RestoreModel"
+
 
 export default class AuthService {
 

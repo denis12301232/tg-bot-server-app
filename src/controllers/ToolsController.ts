@@ -1,13 +1,14 @@
-import ApiError from "../exeptions/ApiError";
-import { validationResult } from "express-validator";
+import ApiError from "@/exeptions/ApiError"
+import { validationResult } from "express-validator"
 import { Request, Response, NextFunction } from "express"
-import { Payload } from "../interfaces/Payload";
-import ToolsService from "../services/ToolsService";
-import UserDto from "../dtos/UserDto";
-import UserModel from "../models/UserModel";
+import { Payload } from "@/interfaces/Payload"
+import ToolsService from "@/services/ToolsService"
+import UserDto from "@/dtos/UserDto"
+import UserModel from "@/models/UserModel"
 
 
 export default class ToolsController {
+
    static async setNewName(request: Request, response: Response, next: NextFunction) {
       try {
          const { name } = request.body;

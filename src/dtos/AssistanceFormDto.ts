@@ -1,6 +1,6 @@
-import { AssistanceForm } from "../interfaces/AssistanceForm";
-import { Types } from "mongoose";
-import Constants from "../libs/Constants";
+import { AssistanceForm } from "@/interfaces/AssistanceForm"
+import { Types } from "mongoose"
+import Constants from "@/libs/Constants"
 
 export default class AssistanceFormDto {
    readonly humansFormList: Array<{ _id: Types.ObjectId, form: AssistanceForm }>

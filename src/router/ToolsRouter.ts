@@ -1,9 +1,9 @@
 import { Router } from "express"
 import { body } from "express-validator"
-import Validate from "../libs/Validate"
-import AuthMiddleware from "../middlewares/AuthMiddleware"
-import RoleMiddleware from "../middlewares/RoleMiddleware"
-import ToolsController from "../controllers/ToolsController"
+import Validate from "@/libs/Validate"
+import AuthMiddleware from "@/middlewares/AuthMiddleware"
+import RoleMiddleware from "@/middlewares/RoleMiddleware"
+import ToolsController from "@/controllers/ToolsController"
 
 const router: Router = Router();
 

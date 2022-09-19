@@ -1,7 +1,7 @@
-import ApiError from "../exeptions/ApiError";
-import UserModel from "../models/UserModel";
-import bcrypt from "bcrypt";
-import ToolsModel from "../models/ToolsModel";
+import bcrypt from "bcrypt"
+import ApiError from "@/exeptions/ApiError"
+import UserModel from "@/models/UserModel"
+import ToolsModel from "@/models/ToolsModel"
 
 
 export default class ToolsService {

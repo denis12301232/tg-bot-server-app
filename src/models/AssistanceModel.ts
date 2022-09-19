@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { AssistanceForm } from "../interfaces/AssistanceForm";
-import Validate from "../libs/Validate";
+import mongoose from "mongoose"
+import { AssistanceForm } from "@/interfaces/AssistanceForm"
+import Validate from "@/libs/Validate"
 
 const { Schema, model } = mongoose;
 const AssistanceSchema = new Schema<AssistanceForm>({

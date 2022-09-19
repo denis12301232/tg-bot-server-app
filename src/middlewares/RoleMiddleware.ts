@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { IUser } from "../interfaces/IUser";
-import ApiError from "../exeptions/ApiError";
+import { Request, Response, NextFunction } from "express"
+import { IUser } from "@/interfaces/IUser"
+import ApiError from "@/exeptions/ApiError"
 
 
 export default function RoleMiddleware(roles: Array<string>) {

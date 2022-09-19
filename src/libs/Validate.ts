@@ -1,4 +1,4 @@
-import { AssistanceForm } from "../interfaces/AssistanceForm";
+import { AssistanceForm } from "@/interfaces/AssistanceForm"
 
 export default class Validate {
    static required(value: string): boolean {
@@ -11,7 +11,6 @@ export default class Validate {
 
    static isPhone(value: string) {
       return /^\+380([0-9]{9})$/.test(value);
-      //return /^([0-9]{9})$/.test(value);
    }
 
    static isValidDistrict(value: string) {

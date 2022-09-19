@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { ITools } from "../interfaces/ITools";
+import mongoose from "mongoose"
+import { ITools } from "@/interfaces/ITools"
 
 const { Schema, model } = mongoose;
 

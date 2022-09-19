@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express"
-import ApiError from "../exeptions/ApiError"
-import AssistanceService from "../services/AssistanceService"
-import HumansListDto from "../dtos/HumansListDto"
-import AssistanceFormDto from "../dtos/AssistanceFormDto"
+import ApiError from "@/exeptions/ApiError"
+import AssistanceService from "@/services/AssistanceService"
+import HumansListDto from "@/dtos/HumansListDto"
+import AssistanceFormDto from "@/dtos/AssistanceFormDto"
 
 
 export default class AssistanceController {
