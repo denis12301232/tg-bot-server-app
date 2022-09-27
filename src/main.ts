@@ -6,6 +6,7 @@ import cors from "cors"
 import router from "@/router/index"
 import ErrorMiddleware from "@/middlewares/ErrorMiddleware"
 import cookieParser from "cookie-parser"
+import { resolve } from 'path'
 
 
 config();
@@ -21,6 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
 app.use('/', express.static('/app/public'));
+//app.use('/', express.static(resolve(__dirname, '../public')))
+//app.get('*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
 app.get('*', (req, res) => res.sendFile('/app/public/index.html'));
 app.use(ErrorMiddleware);
 
