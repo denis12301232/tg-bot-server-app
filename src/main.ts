@@ -21,10 +21,10 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
-app.use('/', express.static(join(__dirname,'/app/public')));
+app.use('/', express.static(join('/app/public')));
 // app.use('/', express.static(resolve(__dirname, '../public')))
 // app.get('*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
-app.get('*', (req, res) => res.sendFile(join(__dirname,'/app/public/index.html')));
+app.get('*', (req, res) => res.sendFile(join('/app/public/index.html')));
 app.use(ErrorMiddleware);
 
 
