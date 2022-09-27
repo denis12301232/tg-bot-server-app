@@ -8,6 +8,7 @@
     "dev": "tsc-watch --onSuccess \"node ./dist/main.js\"",
     "build": "tsc -p ."
   },
+  "homepage": "https://tg-bot-client-app.herokuapp.com/",
   "keywords": [],
   "author": "",
   "license": "ISC",
