@@ -34,4 +34,5 @@ const start = async (): Promise<void> => {
       if (e instanceof Error) console.log(e.message);
    }
 }
+
 start();
