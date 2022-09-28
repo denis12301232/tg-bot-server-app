@@ -25,6 +25,9 @@ app.use('/', express.static(resolve(__dirname, '../public')));
 app.get('*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
 app.use(ErrorMiddleware);
 
+console.log(resolve(__dirname, '../public'));
+console.log(__dirname);
+
 
 const start = async (): Promise<void> => {
    try {
