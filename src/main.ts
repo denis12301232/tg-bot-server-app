@@ -1,11 +1,11 @@
-import "module-alias/register"
-import express from "express"
-import mongoose, { ConnectOptions } from "mongoose"
-import { config } from "dotenv"
-import cors from "cors"
-import router from "@/router/index"
-import ErrorMiddleware from "@/middlewares/ErrorMiddleware"
-import cookieParser from "cookie-parser"
+import 'module-alias/register'
+import express from 'express'
+import mongoose, { ConnectOptions } from 'mongoose'
+import { config } from 'dotenv'
+import cors from 'cors'
+import router from '@/router/index'
+import ErrorMiddleware from '@/middlewares/ErrorMiddleware'
+import cookieParser from 'cookie-parser'
 import { resolve } from 'path'
 
 
@@ -24,9 +24,6 @@ app.use('/api', router);
 app.use('/', express.static(resolve(__dirname, '../public')));
 app.get('*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
 app.use(ErrorMiddleware);
-
-console.log(resolve(__dirname, '../public'));
-console.log(__dirname);
 
 
 const start = async (): Promise<void> => {
