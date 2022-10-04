@@ -1,11 +1,11 @@
-import { v4 } from "uuid"
-import bcrypt from "bcrypt"
-import UserDto from "@/dtos/UserDto"
-import MailService from "./MailService"
-import TokenService from "./TokenService"
-import UserModel from "@/models/UserModel"
-import ApiError from "@/exeptions/ApiError"
-import RestoreModel from "@/models/RestoreModel"
+import { v4 } from 'uuid'
+import bcrypt from 'bcrypt'
+import UserDto from '@/dtos/UserDto'
+import MailService from './MailService'
+import TokenService from './TokenService'
+import UserModel from '@/models/UserModel'
+import ApiError from '@/exeptions/ApiError'
+import RestoreModel from '@/models/RestoreModel'
 
 
 export default class AuthService {
@@ -47,13 +47,13 @@ export default class AuthService {
       const user = await UserModel.findOne({ email });
 
       if (!user) {
-         throw ApiError.BadRequest(`Неверный email!`, ["email"]);
+         throw ApiError.BadRequest(`Неверный email!`, ['email']);
       }
 
       const isPasswordsEqual = await bcrypt.compare(password, user.password);
 
       if (!isPasswordsEqual) {
-         throw ApiError.BadRequest(`Неверный пароль!`, ["password"]);
+         throw ApiError.BadRequest(`Неверный пароль!`, ['password']);
       }
 
       const userDto = new UserDto(user);
@@ -101,7 +101,7 @@ export default class AuthService {
       const user = await UserModel.findOne({ email });
 
       if (!user) {
-         throw ApiError.BadRequest(`Неверный email!`, ["email"]);
+         throw ApiError.BadRequest(`Неверный email!`, ['email']);
       }
 
       const restoreData = await RestoreModel.findOne({ user: user._id });

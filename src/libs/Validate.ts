@@ -1,4 +1,4 @@
-import { AssistanceForm } from "@/interfaces/AssistanceForm"
+import { AssistanceForm } from '@/interfaces/interfaces'
 
 export default class Validate {
    static required(value: string): boolean {

@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express"
-import ApiError from "@/exeptions/ApiError"
-import AssistanceService from "@/services/AssistanceService"
-import HumansListDto from "@/dtos/HumansListDto"
-import AssistanceFormDto from "@/dtos/AssistanceFormDto"
+import { Request, Response, NextFunction } from 'express'
+import ApiError from '@/exeptions/ApiError'
+import AssistanceService from '@/services/AssistanceService'
+import HumansListDto from '@/dtos/HumansListDto'
+import AssistanceFormDto from '@/dtos/AssistanceFormDto'
 
 
 export default class AssistanceController {
@@ -11,7 +11,7 @@ export default class AssistanceController {
       try {
          const saved = await AssistanceService.catchAssistaceForm(request.body.form)
 
-         return response.json({ message: "Успешно сохранено!", saved });
+         return response.json({ message: 'Успешно сохранено!', saved });
       } catch (e) {
          next(e);
       }

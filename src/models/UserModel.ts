@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import { IUser } from "@/interfaces/IUser"
+import mongoose from 'mongoose'
+import { IUser } from '@/interfaces/interfaces'
 
 const { Schema, model } = mongoose;
 

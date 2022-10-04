@@ -1,12 +1,11 @@
-import AssistanceModel from "@/models/AssistanceModel"
-import { AssistanceForm } from "@/interfaces/AssistanceForm"
-import { GoogleSpreadsheet } from "google-spreadsheet"
-import Constants from "@/libs/Constants"
-import { Obj } from "@/interfaces/Obj"
-import ApiError from "@/exeptions/ApiError"
-import Validate from "@/libs/Validate"
-import ToolsModel from "@/models/ToolsModel"
-import { Types } from "mongoose"
+import AssistanceModel from '@/models/AssistanceModel'
+import { GoogleSpreadsheet } from 'google-spreadsheet'
+import Constants from '@/libs/Constants'
+import { AnyObj, AssistanceForm } from '@/interfaces/interfaces'
+import ApiError from '@/exeptions/ApiError'
+import Validate from '@/libs/Validate'
+import ToolsModel from '@/models/ToolsModel'
+import { Types } from 'mongoose'
 
 
 export default class AssistanceService {
@@ -46,7 +45,7 @@ export default class AssistanceService {
       const api = await ToolsModel.find().limit(1);
 
       if (!api.length) {
-         return { message: "Интеграция не настроена!", link: `` };
+         return { message: 'Интеграция не настроена!', link: `` };
       }
 
       let forms: Array<AssistanceForm & { _id: Types.ObjectId }>;
@@ -66,8 +65,8 @@ export default class AssistanceService {
                         const max = +query.split('-')[1];
                         return year >= min && year <= max;
                      },
-                     args: ["$birth", query],
-                     lang: "js"
+                     args: ['$birth', query],
+                     lang: 'js'
                   }
                }
             }
@@ -106,12 +105,12 @@ export default class AssistanceService {
                obj[value.display] = item[key];
             }
             return obj;
-         }, <Obj>{});
+         }, <AnyObj>{});
          await sheet.addRow(sheetObj);
       }
 
       return {
-         message: "Успешно сформировано!",
+         message: 'Успешно сформировано!',
          link: `https://docs.google.com/spreadsheets/d/${api[0].api.google.service.sheetId}`
       };
    }

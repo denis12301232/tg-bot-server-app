@@ -1,5 +1,5 @@
-import { AssistanceForm } from "@/interfaces/AssistanceForm"
-import { Types } from "mongoose"
+import { AssistanceForm } from '@/interfaces/interfaces'
+import { Types } from 'mongoose'
 
 export default class HumansListDto {
    readonly humansList: Array<{ fio: string, _id: Types.ObjectId }>

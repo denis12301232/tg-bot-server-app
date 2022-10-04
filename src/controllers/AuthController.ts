@@ -1,7 +1,7 @@
-import ApiError from "@/exeptions/ApiError"
-import AuthService from "@/services/AuthService"
-import { validationResult } from "express-validator"
-import { Request, Response, NextFunction } from "express"
+import ApiError from '@/exeptions/ApiError'
+import AuthService from '@/services/AuthService'
+import { validationResult } from 'express-validator'
+import { Request, Response, NextFunction } from 'express'
 
 
 export default class AuthController {
@@ -20,7 +20,7 @@ export default class AuthController {
          response.cookie('refreshToken', userData.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: "lax",
+            sameSite: 'lax',
          });
 
          return response.json(userData);

@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import { IToken } from "@/interfaces/IToken"
+import mongoose from 'mongoose'
+import { IToken } from '@/interfaces/interfaces'
 
 const { Schema, model } = mongoose;
 

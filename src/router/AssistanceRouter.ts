@@ -1,7 +1,7 @@
-import { Router } from "express"
-import AssistanceController from "@/controllers/AssistanceController"
-import AuthMiddleware from "@/middlewares/AuthMiddleware"
-import RoleMiddleware from "@/middlewares/RoleMiddleware"
+import { Router } from 'express'
+import AssistanceController from '@/controllers/AssistanceController'
+import AuthMiddleware from '@/middlewares/AuthMiddleware'
+import RoleMiddleware from '@/middlewares/RoleMiddleware'
 
 
 const router: Router = Router();

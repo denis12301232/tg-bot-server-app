@@ -1,7 +1,7 @@
-import { Router } from "express"
-import AuthRouter from "./AuthRouter"
-import ToolsRouter from "./ToolsRouter"
-import AssistanseRouter from "./AssistanceRouter"
+import { Router } from 'express'
+import AuthRouter from './AuthRouter'
+import ToolsRouter from './ToolsRouter'
+import AssistanseRouter from './AssistanceRouter'
 
 
 const router: Router = Router();

@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt"
-import ApiError from "@/exeptions/ApiError"
-import UserModel from "@/models/UserModel"
-import ToolsModel from "@/models/ToolsModel"
+import bcrypt from 'bcrypt'
+import ApiError from '@/exeptions/ApiError'
+import UserModel from '@/models/UserModel'
+import ToolsModel from '@/models/ToolsModel'
 
 
 export default class ToolsService {
@@ -39,7 +39,7 @@ export default class ToolsService {
       const isPasswordsEqual = await bcrypt.compare(oldPassword, user.password);
 
       if (!isPasswordsEqual) {
-         throw ApiError.BadRequest(`Неверный пароль!`, ["password"]);
+         throw ApiError.BadRequest(`Неверный пароль!`, ['password']);
       }
 
       const hashPassword: string = await bcrypt.hash(newPassword, 5);

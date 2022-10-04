@@ -1,6 +1,6 @@
-import jwt, { Secret } from "jsonwebtoken"
-import UserDto from "@/dtos/UserDto"
-import TokenModel from "@/models/TokenModel"
+import jwt, { Secret } from 'jsonwebtoken'
+import UserDto from '@/dtos/UserDto'
+import TokenModel from '@/models/TokenModel'
 
 export default class TokenService {
 

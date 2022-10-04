@@ -1,5 +1,5 @@
-import { Document } from "mongoose"
-import { IUser } from "@/interfaces/IUser"
+import { Document } from 'mongoose'
+import { IUser } from '@/interfaces/interfaces'
 
 export default class UserDto {
 
