@@ -8,25 +8,25 @@ export default function (request: Request, response: Response, next: NextFunctio
       const authHeader = request.headers.authorization;
 
       if (!authHeader) {
-         return next(ApiError.UnauthorizedError());
+         return next(ApiError.Unauthorized());
       }
 
       const accessToken = authHeader.split(' ')[1];
 
       if (!accessToken) {
-         return next(ApiError.UnauthorizedError());
+         return next(ApiError.Unauthorized());
       }
 
       const userData = TokenService.validateAccessToken(accessToken);
 
       if (!userData) {
-         return next(ApiError.UnauthorizedError());
+         return next(ApiError.Unauthorized());
       }
 
       request.user = userData;
       next();
 
    } catch (e) {
-      return next(ApiError.UnauthorizedError());
+      return next(ApiError.Unauthorized());
    }
 }

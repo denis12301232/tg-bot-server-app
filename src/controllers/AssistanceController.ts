@@ -51,7 +51,7 @@ export default class AssistanceController {
       try {
          const id = request.body.id;
          if (!id) {
-            return next(ApiError.BadRequest('Отсутсвует тело запроса!'));
+            return next(ApiError.BadRequest('Отсутствует тело запроса!'));
          }
          const deleteResult = await AssistanceService.deleteHuman(id);
 

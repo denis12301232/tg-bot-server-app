@@ -1,7 +1,11 @@
 import { Types } from 'mongoose'
 
-export interface AnyObj {
+export interface AnyObject {
    [name: string]: any;
+}
+
+export interface StringObject {
+   [name: string]: string;
 }
 
 export interface Payload {
@@ -53,10 +57,10 @@ export interface AssistanceForm {
    house: string,
    flat: string,
    people_num: number,
-   people_fio?: Array<string>,
+   people_fio: string[],
    invalids: string,
    children: string,
-   children_age?: Array<string>,
+   children_age: string[],
    food: string,
    drugs: string,
    water: string,

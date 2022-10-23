@@ -9,7 +9,7 @@ export default function RoleMiddleware(roles: Array<string>) {
          for (const role of roles) {
             if ((<IUser>request.user).roles.includes(role)) return next();
          }
-         throw ApiError.AccessDenied();
+         throw ApiError.Forbidden();
       } catch (e) {
          return next(e);
       }

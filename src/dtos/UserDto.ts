@@ -2,7 +2,6 @@ import { Document } from 'mongoose'
 import { IUser } from '@/interfaces/interfaces'
 
 export default class UserDto {
-
     readonly email: string;
     readonly id: string;
     readonly isActivated: boolean;

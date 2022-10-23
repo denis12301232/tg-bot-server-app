@@ -1,7 +1,7 @@
 import AssistanceModel from '@/models/AssistanceModel'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import Constants from '@/libs/Constants'
-import { AnyObj, AssistanceForm } from '@/interfaces/interfaces'
+import { AnyObject, AssistanceForm } from '@/interfaces/interfaces'
 import ApiError from '@/exeptions/ApiError'
 import Validate from '@/libs/Validate'
 import ToolsModel from '@/models/ToolsModel'
@@ -105,7 +105,7 @@ export default class AssistanceService {
                obj[value.display] = item[key];
             }
             return obj;
-         }, <AnyObj>{});
+         }, <AnyObject>{});
          await sheet.addRow(sheetObj);
       }
 

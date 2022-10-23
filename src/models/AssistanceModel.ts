@@ -28,7 +28,7 @@ const AssistanceSchema = new Schema<AssistanceForm>({
       type: String,
       required: true,
       validate: {
-         validator: Validate.isDDMMYYYY,
+         validator: Validate.isYYYYMMDD,
          message: (props) => `${props.value} is not a valid birth!`
       }
    },
@@ -57,8 +57,8 @@ const AssistanceSchema = new Schema<AssistanceForm>({
       required: true,
    },
    people_fio: {
-      type: Array,
-      default: [],
+      type: [String],
+      default: ['-'],
       validate: {
          validator: Array.isArray,
          message: (props) => `${props.value} is not a valid type!`
@@ -73,8 +73,8 @@ const AssistanceSchema = new Schema<AssistanceForm>({
       default: 'Нет',
    },
    children_age: {
-      type: Array,
-      default: [],
+      type: [String],
+      default: ['-'],
       validate: {
          validator: Array.isArray,
          message: (props) => `${props.value} is not a valid type!`
@@ -94,7 +94,7 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    },
    products_detail: {
       type: String,
-      default: '',
+      default: '-',
    },
    gigien: {
       type: String,
@@ -102,15 +102,15 @@ const AssistanceSchema = new Schema<AssistanceForm>({
    },
    gigien_num: {
       type: String,
-      default: '',
+      default: '-',
    },
    pampers: {
       type: String,
-      default: '',
+      default: '-',
    },
    diet: {
       type: String,
-      default: '',
+      default: '-',
    },
    pers_data_agreement: {
       type: Boolean,

@@ -1,49 +1,30 @@
-import nodemailer, { TransportOptions } from 'nodemailer'
+import { createTransport } from 'nodemailer'
 import GoogleApi from '@/libs/GoogleApi'
 
 export default class MailService {
-   static readonly transport = nodemailer.createTransport(<TransportOptions>{
+   private static readonly transport = createTransport({
       service: 'gmail',
       auth: {
          user: GoogleApi.USER,
          pass: GoogleApi.APP_PASS,
       }
-      // auth: {
-      //    type: 'OAuth2',
-      //    user: GoogleApi.USER,
-      //    clientId: GoogleApi.CLIENT_ID,
-      //    clientSecret: GoogleApi.CLIENT_SECRET,
-      //    refreshToken: GoogleApi.REFRESH_TOKEN,
-      // }
    });
 
-   static async sendActivationMail(to: string, link: string): Promise<void> {
-      await this.transport.sendMail({
-         from: GoogleApi.USER,
-         to,
-         subject: `Активация аккаунта на сайте ${process.env.API_URL}`,
-         text: '',
-         html: `
-                <div>
-                    <h1>Для активации перейдите по ссылке:</h1>
-                    <a href="${link}">${link}</a>
-                </div>
-                `
-      });
+   private static sendMail(to: string, subject: string, html: string) {
+      return this.transport.sendMail({ from: GoogleApi.USER, to, subject, html });
    }
 
-   static async sendRestoreMail(to: string, link: string): Promise<void> {
-      await this.transport.sendMail({
-         from: GoogleApi.USER,
-         to,
-         subject: `Восстановление пароля на сайте ${process.env.API_URL}`,
-         text: '',
-         html: `
-                <div>
-                    <h1>Для восстановления перейдите по ссылке:</h1>
-                    <a href="${link}">${link}</a>
-                </div>
-                `
-      });
+   static sendActivationMail(to: string, link: string) {
+      const subject = `Активация аккаунта на сайте ${process.env.SERVER_URL}`;
+      const html = `<div><h1>Для активации перейдите по ссылке:</h1><a href="${link}">${link}</a></div>`;
+
+      return this.sendMail(to, subject, html)
+   }
+
+   static async sendRestoreMail(to: string, link: string) {
+      const subject = `Восстановление пароля на сайте ${process.env.SERVER_URL}`;
+      const html = `<div><h1>Для восстановления перейдите по ссылке:</h1><a href="${link}">${link}</a></div>`;
+
+      return this.sendMail(to, subject, html);
    }
 }

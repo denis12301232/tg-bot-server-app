@@ -21,7 +21,7 @@ export default class AuthService {
       const activationLink: string = v4();
       const user = await UserModel.create({ email, password: hashPassword, activationLink, name });
 
-      await MailService.sendActivationMail(email, `${process.env.API_URL}/api/auth/activate/${activationLink}`)
+      await MailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/auth/activate/${activationLink}`)
          .catch(e => console.log(e.message));
 
       const userDto = new UserDto(user);
@@ -72,14 +72,14 @@ export default class AuthService {
    static async refresh(refreshToken: string) {
 
       if (!refreshToken) {
-         throw ApiError.UnauthorizedError();
+         throw ApiError.Unauthorized();
       }
 
       const userData = <UserDto>TokenService.validateRefreshToken(refreshToken);
       const tokenFromDb = await TokenService.findToken(refreshToken);
 
       if (!userData || !tokenFromDb) {
-         throw ApiError.UnauthorizedError();
+         throw ApiError.Unauthorized();
       }
 
       const user = await UserModel.findById(userData.id);
@@ -115,7 +115,7 @@ export default class AuthService {
          await RestoreModel.create({ user: user._id, restoreLink: link, createdAt: dateNow });
       }
 
-      await MailService.sendRestoreMail(email, `${process.env.API_URL}/restore?link=${link}`)
+      await MailService.sendRestoreMail(email, `${process.env.SERVER_URL}/restore?link=${link}`)
          .catch(e => console.log(e.message));
 
       return `На ваш адрес ${email} отправлено письмо со ссылкой. Перейдите по ней для смены пароля.`;
