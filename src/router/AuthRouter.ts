@@ -16,7 +16,6 @@ router.post('/registration',
     body('name').isLength({ min: 1 }),
     AuthController.registration
 );
-router.get('/activate/:link', AuthController.activate);
 router.post('/restore/password', body('email').isEmail(), AuthController.restorePassword);
 router.post('/restore/password/new',
     body('password').isLength({ min: 6, max: 20 }),
