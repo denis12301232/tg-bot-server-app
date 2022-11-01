@@ -10,7 +10,7 @@ export interface StringObject {
 
 export interface Payload {
    readonly email: string;
-   readonly id: string;
+   readonly _id: string;
    readonly isActivated: boolean;
    readonly isAdmin: boolean;
    readonly name: string;
@@ -38,9 +38,10 @@ export interface ITools {
          user: string,
          app_password: string,
          readonly service: {
-            user: string,
-            privateKey: string,
-            sheetId: string,
+            user: string;
+            privateKey: string;
+            sheetId: string;
+            folderId: string;
          }
       }
    }

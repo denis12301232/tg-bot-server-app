@@ -77,18 +77,13 @@ export default class AssistanceController {
 
    static async saveFormsToSheet(request: Request, response: Response, next: NextFunction) {
       try {
-         const { filter, query } = request.query;
+         const { district, birth } = request.body;
 
-         if (!filter || !query) {
+         if (!district && (!birth.from || !birth.to)) {
             return next(ApiError.BadRequest('Неверный запрос!'));
          }
-
-         if (typeof filter !== 'string' || typeof query !== 'string') {
-            return next(ApiError.BadRequest('Неверный запрос!'));
-         }
-
-         const result = await AssistanceService.saveFormsToSheet(filter, query);
-         return response.json(result);
+         const result = await AssistanceService.saveFormsToSheet(request.body);
+         return response.json(result)
       } catch (e) {
          next(e);
       }

@@ -49,7 +49,7 @@ export default class ToolsService {
       return user;
    }
 
-   static async setGoogleServiceAccountSettings(serviceUser: string, servicePrivateKey: string, sheetId: string) {
+   static async setGoogleServiceAccountSettings(serviceUser: string, servicePrivateKey: string, sheetId: string, folderId: string) {
       const api = await ToolsModel.find().limit(1);
       if (!api.length) {
          const response = await ToolsModel.create({
@@ -58,52 +58,37 @@ export default class ToolsService {
                   service: {
                      user: serviceUser,
                      privateKey: servicePrivateKey,
-                     sheetId: sheetId,
+                     sheetId,
+                     folderId
                   }
                }
             }
          });
          return response;
       } else {
-         api[0]!.api!.google!.service!.user = serviceUser;
-         api[0]!.api!.google!.service!.privateKey = servicePrivateKey.replace(/\\n/g, '\n');
-         api[0]!.api!.google!.service!.sheetId = sheetId;
+         if(serviceUser) api[0]!.api!.google!.service!.user = serviceUser;
+         if(servicePrivateKey) api[0]!.api!.google!.service!.privateKey = servicePrivateKey.replace(/\\n/g, '\n');
+         if(sheetId) api[0]!.api!.google!.service!.sheetId = sheetId;
+         if(folderId) api[0]!.api!.google!.service!.folderId = folderId;
          const response = await api[0].save();
          return response;
       }
    }
 
-   static async giveAdminRights(email: string) {
-      const user = await UserModel.findOne({ email });
+   static async updateRoles(_id: string, roles: string[]) {
+      const user = await UserModel.findOne({ _id });
 
       if (!user) {
          throw ApiError.BadRequest('Пользователь не найден!');
       }
-
-      if (user.roles.includes('admin')) {
-         throw ApiError.BadRequest('Пользователь уже администратор!');
-      }
-
-      user.roles.push('admin');
+      user.roles = roles;
       await user.save();
 
-      return { message: `Пользователь ${user.email} теперь администратор` };
+      return { message: 'Обновлено' };
    }
 
-   static async takeAdminRights(email: string) {
-      const user = await UserModel.findOne({ email });
-
-      if (!user) {
-         throw ApiError.BadRequest('Пользователь не найден!');
-      }
-
-      if (!user.roles.includes('admin')) {
-         throw ApiError.BadRequest('Пользователь и так не администратор!');
-      }
-
-      user.roles = user.roles.filter((item) => item !== 'admin');
-      await user.save();
-
-      return { message: `Пользователь ${user.email} теперь не администратор` };
+   static async getUsers(_id: string) {
+      const users = await UserModel.find({ _id: { $ne: _id } }, { _id: 1, email: 1, name: 1, roles: 1 });
+      return users;
    }
 }

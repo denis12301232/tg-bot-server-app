@@ -26,6 +26,10 @@ const ToolsSchema = new Schema<ITools>({
             sheetId: {
                type: String,
                default: '',
+            },
+            folderId: {
+               type: String,
+               default: '',
             }
          }
       }

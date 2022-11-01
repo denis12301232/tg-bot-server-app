@@ -11,6 +11,6 @@ router.post('/info', AuthMiddleware, RoleMiddleware(['admin']), AssistanceContro
 router.get('/list', AuthMiddleware, RoleMiddleware(['admin']), AssistanceController.sendHumansList);
 router.delete('/delete/human', AuthMiddleware, RoleMiddleware(['admin']), AssistanceController.deleteHuman);
 router.patch('/modify/form', AuthMiddleware, RoleMiddleware(['admin']), AssistanceController.modifyAssistanceForm);
-router.get('/sheet', AuthMiddleware, RoleMiddleware(['admin']), AssistanceController.saveFormsToSheet);
+router.post('/sheet', AuthMiddleware, RoleMiddleware(['admin']), AssistanceController.saveFormsToSheet);
 
 export default router;

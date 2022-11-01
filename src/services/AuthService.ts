@@ -27,7 +27,7 @@ export default class AuthService {
       const userDto = new UserDto(user);
       const tokens = TokenService.generateTokens({ ...userDto });
 
-      await TokenService.saveToken(userDto.id, tokens.refreshToken);
+      await TokenService.saveToken(userDto._id, tokens.refreshToken);
 
       return { ...tokens, user: userDto };
    }
@@ -59,7 +59,7 @@ export default class AuthService {
       const userDto = new UserDto(user);
       const tokens = TokenService.generateTokens({ ...userDto });
 
-      await TokenService.saveToken(userDto.id, tokens.refreshToken);
+      await TokenService.saveToken(userDto._id, tokens.refreshToken);
 
       return { ...tokens, user: userDto };
    }
@@ -82,7 +82,7 @@ export default class AuthService {
          throw ApiError.Unauthorized();
       }
 
-      const user = await UserModel.findById(userData.id);
+      const user = await UserModel.findById(userData._id);
 
       if (!user) {
          throw ApiError.BadRequest(`Пользователь не найден!`);
@@ -91,7 +91,7 @@ export default class AuthService {
       const userDto = new UserDto(user);
       const tokens = TokenService.generateTokens({ ...userDto });
 
-      await TokenService.saveToken(userDto.id, tokens.refreshToken);
+      await TokenService.saveToken(userDto._id, tokens.refreshToken);
 
       return { ...tokens, user: userDto };
    }

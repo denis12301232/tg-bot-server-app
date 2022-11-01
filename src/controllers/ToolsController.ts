@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from 'express'
 import { Payload } from '@/interfaces/interfaces'
 import ToolsService from '@/services/ToolsService'
 import UserDto from '@/dtos/UserDto'
-import UserModel from '@/models/UserModel'
 
 
 export default class ToolsController {
@@ -12,10 +11,10 @@ export default class ToolsController {
    static async setNewName(request: Request, response: Response, next: NextFunction) {
       try {
          const { name } = request.body;
-         const { id } = <Payload>request.user;
+         const { _id } = <Payload>request.user;
          if (!name) next(ApiError.BadRequest('Имя не может быть пустым!'));
 
-         const user = await ToolsService.setNewName(id, name);
+         const user = await ToolsService.setNewName(_id, name);
 
          return response.json({ user: new UserDto(user) });
       } catch (e) {
@@ -32,8 +31,8 @@ export default class ToolsController {
          }
 
          const { email } = request.body;
-         const { id } = <Payload>request.user;
-         const user = await ToolsService.setNewEmail(id, email);
+         const { _id } = <Payload>request.user;
+         const user = await ToolsService.setNewEmail(_id, email);
 
          return response.json({ user: new UserDto(user) });
       } catch (e) {
@@ -50,8 +49,8 @@ export default class ToolsController {
          }
 
          const { newPassword, oldPassword } = request.body;
-         const { id } = <Payload>request.user;
-         const user = await ToolsService.setNewPassword(id, newPassword, oldPassword);
+         const { _id } = <Payload>request.user;
+         const user = await ToolsService.setNewPassword(_id, newPassword, oldPassword);
 
          return response.json({ user: new UserDto(user) });
       } catch (e) {
@@ -61,16 +60,13 @@ export default class ToolsController {
 
    static async setGoogleServiceAccountSettings(request: Request, response: Response, next: NextFunction) {
       try {
-         const { serviceUser, servicePrivateKey, sheetId } = request.body;
+         const { serviceUser, servicePrivateKey, sheetId, folderId } = request.body;
 
-         if (!serviceUser || !servicePrivateKey || !sheetId) {
+         if (!serviceUser && !servicePrivateKey && !sheetId && !folderId) {
             return next(ApiError.BadRequest('Неверный запрос'));
          }
-
-         const result = await ToolsService.setGoogleServiceAccountSettings(serviceUser, servicePrivateKey, sheetId);
-
+         const result = await ToolsService.setGoogleServiceAccountSettings(serviceUser, servicePrivateKey, sheetId, folderId);
          return response.json({ message: 'Сохранено!' });
-
       } catch (e) {
          next(e);
       }
@@ -78,46 +74,30 @@ export default class ToolsController {
 
    static async getUsers(request: Request, response: Response, next: NextFunction) {
       try {
-         const users = await UserModel.find();
+         const { _id } = request.query;
 
+         if (!(typeof _id === 'string')) {
+            return next(ApiError.BadRequest('Неверный запрос'));
+         }
+         const users = await ToolsService.getUsers(_id);
          return response.json(users);
-
       } catch (e) {
          next(e);
       }
    }
 
-   static async giveAdminRights(request: Request, response: Response, next: NextFunction) {
+   static async updateRoles(request: Request, response: Response, next: NextFunction) {
       try {
-         const { email } = request.body;
+         const { _id, roles } = request.body;
 
-         if (!email) {
+         if (!_id || !roles.length || _id === (<Payload>request.user)?._id) {
             return next(ApiError.BadRequest('Неверный запрос'));
          }
-
-         const message = await ToolsService.giveAdminRights(email);
-
-         return response.json(message);
-
+         const result = await ToolsService.updateRoles(_id, roles);
+         return response.json(result);
       } catch (e) {
          next(e);
       }
    }
 
-   static async takeAdminRights(request: Request, response: Response, next: NextFunction) {
-      try {
-         const { email } = request.body;
-
-         if (!email) {
-            return next(ApiError.BadRequest('Неверный запрос'));
-         }
-
-         const message = await ToolsService.takeAdminRights(email);
-
-         return response.json(message);
-         
-      } catch (e) {
-         next(e);
-      }
-   }
 }
