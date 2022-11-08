@@ -8,6 +8,6 @@ RUN npm i
 COPY . .
 RUN npm run build
 
-EXPOSE 50
+EXPOSE 5000
 
 CMD ["node", "./dist/main.js"]
