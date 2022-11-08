@@ -17,6 +17,7 @@ export default class AssistanceService {
 
    static async sendAssistanceForm(surname: string, name: string, patronymic: string) {
       const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 });
+      if(!form.length) throw ApiError.BadRequest(`Увы, ничего не найдено по запросу ${surname} ${name} ${patronymic}`)
       return form;
    }
 

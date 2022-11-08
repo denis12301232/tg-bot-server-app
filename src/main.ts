@@ -1,6 +1,6 @@
 import 'module-alias/register'
 import express from 'express'
-import mongoose, { ConnectOptions } from 'mongoose'
+import mongoose from 'mongoose'
 import { config } from 'dotenv'
 import cors from 'cors'
 import router from '@/router/index'
@@ -13,7 +13,11 @@ config();
 const PORT = process.env.PORT || '5000';
 const app = express();
 
-app.use(cors({ credentials: true, origin: process.env.CLIENT_URL, exposedHeaders: ['X-Total-Count'] }));
+app.use(cors({
+   credentials: true,
+   origin: process.env.CLIENT_URL.split(' '),
+   exposedHeaders: ['X-Total-Count']
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
@@ -24,7 +28,7 @@ app.use(ErrorMiddleware);
 
 const start = async () => {
    try {
-      await mongoose.connect(process.env.DB_URL, <ConnectOptions>{ useUnifiedTopology: true, useNewUrlParser: true });
+      await mongoose.connect(process.env.DB_URL, { dbName: process.env.DB_NAME });
       app.listen(PORT, (): void => console.log(`Server started on ${PORT} port`));
    } catch (e) {
       if (e instanceof Error) console.log(e.message);

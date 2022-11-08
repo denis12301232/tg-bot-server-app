@@ -8,6 +8,7 @@ declare namespace NodeJS {
    interface ProcessEnv {
       readonly PORT: string;
       readonly DB_URL: string;
+      readonly DB_NAME: string;
       readonly SERVER_URL: string;
       readonly CLIENT_URL: string;
       readonly JWT_ACCESS_SECRET: string;

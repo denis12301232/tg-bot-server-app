@@ -26,7 +26,7 @@ export default class ImagesController {
          const list = await driveService.files.list({
             q: `'${api[0].api.google.service.folderId}' in parents and trashed=false 
             and (mimeType=\'image/png\' or mimeType=\'image/jpeg\')`,
-            pageSize: 16,
+            pageSize: 20,
             pageToken
          });
          const nextPageToken = list?.data?.nextPageToken || undefined;

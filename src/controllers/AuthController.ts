@@ -63,7 +63,7 @@ export default class AuthController {
          const activationLink = request.params.link;
          await AuthService.activate(activationLink);
 
-         return response.redirect(<string>process.env.CLIENT_URL);
+         return response.redirect(process.env.CLIENT_URL.split(' ')[0]);
       } catch (e) {
          next(e);
       }
