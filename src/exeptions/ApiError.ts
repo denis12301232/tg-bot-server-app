@@ -9,7 +9,7 @@ export default class ApiError extends Error {
     }
 
     static Unauthorized() {
-        return new ApiError(401, 'Пользователь не авторизован!');
+        return new ApiError(401, 'Unauthorized');
     }
 
     static BadRequest(message: string, errors?: any[]) {
@@ -18,7 +18,7 @@ export default class ApiError extends Error {
 
     static Forbidden() {
         return new ApiError(403, 'Forbidden');
-     }
+    }
 
     static Internal() {
         return new ApiError(500, 'Internal');

@@ -9,5 +9,5 @@ export default function (e: Error, request: Request, response: Response, next: N
          .json({ message: e.message, errors: e.errors });
    }
 
-   return response.status(500).json({ message: 'Неизвестная ошибка!' });
+   return response.status(500).json({ message: 'Internal' });
 }

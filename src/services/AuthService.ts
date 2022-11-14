@@ -140,6 +140,7 @@ export default class AuthService {
       if (!userData) {
          throw ApiError.BadRequest('Срок действия ссылки истек.');
       }
+      
       userData.password = hashPassword;
       await userData.save();
       await restoreData.delete();

@@ -3,9 +3,8 @@ import { GoogleSpreadsheet } from 'google-spreadsheet'
 import Constants from '@/libs/Constants'
 import { AnyObject, AssistanceForm } from '@/interfaces/interfaces'
 import ApiError from '@/exeptions/ApiError'
-import Validate from '@/libs/Validate'
 import ToolsModel from '@/models/ToolsModel'
-import { Types } from 'mongoose'
+
 
 
 export default class AssistanceService {
@@ -17,17 +16,19 @@ export default class AssistanceService {
 
    static async sendAssistanceForm(surname: string, name: string, patronymic: string) {
       const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 });
-      if(!form.length) throw ApiError.BadRequest(`Увы, ничего не найдено по запросу ${surname} ${name} ${patronymic}`)
+      if (!form.length) {
+         throw ApiError.BadRequest(`Увы, ничего не найдено по запросу ${surname} ${name} ${patronymic}`);
+      }
       return form;
    }
 
-   static async sendHumansList({ limit = Infinity, page = 1 }: any) {
-      const skip: number = (page - 1) * limit;
+   static async sendHumansList({ limit = Infinity, page = 1 }: { limit: number, page: number }) {
+      const skip = (page - 1) * limit;
       const humansList = await AssistanceModel.find({}, { name: 1, surname: 1, patronymic: 1, _id: 1 })
          .skip(skip)
          .limit(limit);
 
-      const count: number = await AssistanceModel.count();
+      const count = await AssistanceModel.count();
       return { humansList, count };
    }
 
