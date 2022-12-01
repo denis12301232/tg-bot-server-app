@@ -1,10 +1,10 @@
 import { AssistanceForm } from '@/interfaces/interfaces'
-import { Types } from 'mongoose'
+import { Types, LeanDocument } from 'mongoose'
 
 export default class HumansListDto {
    readonly humansList: Array<{ fio: string, _id: Types.ObjectId }>
 
-   constructor(model: Array<(AssistanceForm & { _id: Types.ObjectId })>) {
+   constructor(model: LeanDocument<AssistanceForm & { _id: Types.ObjectId }>[]) {
       this.humansList = model.map(item => { 
          return {
             _id: item._id,

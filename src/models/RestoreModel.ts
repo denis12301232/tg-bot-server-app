@@ -6,6 +6,7 @@ const RestoreSchema = new Schema({
    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      unique: true,
    },
    restoreLink: {
       type: String,

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { IUser } from '@/interfaces/interfaces'
+import Validate from '@/libs/Validate'
 
 const { Schema, model } = mongoose;
 
@@ -8,10 +9,12 @@ const UserSchema = new Schema<IUser>({
       type: String,
       required: true,
       unique: true,
+      maxlength: [50, 'to many symbols'],
    },
    name: {
       type: String,
       required: true,
+      maxlength: [50, 'to many symbols'],
    },
    password: {
       type: String,
@@ -23,10 +26,15 @@ const UserSchema = new Schema<IUser>({
    },
    activationLink: {
       type: String,
+      maxlength: 1000,
    },
    roles: {
       type: [String],
-      default: ['user']
+      default: ['user'],
+      validate: {
+         validator: Validate.isValidRoles,
+         message: () => `Incorect roles`,
+      }
    }
 });
 

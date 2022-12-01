@@ -7,16 +7,11 @@ export default function (request: Request, response: Response, next: NextFunctio
    try {
       const authHeader = request.headers.authorization;
 
-      if (!authHeader) {
+      if (!authHeader || !authHeader.split(' ')[1]) {
          return next(ApiError.Unauthorized());
       }
 
       const accessToken = authHeader.split(' ')[1];
-
-      if (!accessToken) {
-         return next(ApiError.Unauthorized());
-      }
-
       const userData = TokenService.validateAccessToken(accessToken);
 
       if (!userData) {

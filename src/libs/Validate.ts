@@ -20,4 +20,13 @@ export default class Validate {
    static isYearInterval(value: string) {
       return /^\d{4}-\d{4}$/.test(value);
    }
+
+   static isValidRoles(what: string[]) {
+      for (let i = 0; i < what.length; i++) {
+         if (Constants.roles.indexOf(what[i]) === -1) {
+            return false;
+         }
+      }
+      return true;
+   }
 }

@@ -12,10 +12,10 @@ export default class ToolsController {
       try {
          const { name } = request.body;
          const { _id } = <Payload>request.user;
-         if (!name) next(ApiError.BadRequest('Имя не может быть пустым!'));
-
+         if (!name) {
+            next(ApiError.BadRequest('The name cannot be void'));
+         }
          const user = await ToolsService.setNewName(_id, name);
-
          return response.json({ user: new UserDto(user) });
       } catch (e) {
          next(e);
@@ -27,9 +27,8 @@ export default class ToolsController {
          const errors = validationResult(request);
 
          if (!errors.isEmpty()) {
-            return next(ApiError.BadRequest('Ошибка валидации е-мэйла!', errors.array()));
+            return next(ApiError.BadRequest('Validation error', errors.array()));
          }
-
          const { email } = request.body;
          const { _id } = <Payload>request.user;
          const user = await ToolsService.setNewEmail(_id, email);
@@ -45,7 +44,7 @@ export default class ToolsController {
          const errors = validationResult(request);
 
          if (!errors.isEmpty()) {
-            return next(ApiError.BadRequest('Ошибка валидации пароля!', errors.array()));
+            return next(ApiError.BadRequest('Validation error', errors.array()));
          }
 
          const { newPassword, oldPassword } = request.body;
@@ -63,10 +62,10 @@ export default class ToolsController {
          const { serviceUser, servicePrivateKey, sheetId, folderId } = request.body;
 
          if (!serviceUser && !servicePrivateKey && !sheetId && !folderId) {
-            return next(ApiError.BadRequest('Неверный запрос'));
+            return next(ApiError.BadRequest('Wrong query'));
          }
-         const result = await ToolsService.setGoogleServiceAccountSettings(serviceUser, servicePrivateKey, sheetId, folderId);
-         return response.json({ message: 'Сохранено!' });
+         await ToolsService.setGoogleServiceAccountSettings(serviceUser, servicePrivateKey, sheetId, folderId);
+         return response.json({ message: 'Saved' });
       } catch (e) {
          next(e);
       }
@@ -77,7 +76,7 @@ export default class ToolsController {
          const { _id } = request.query;
 
          if (!(typeof _id === 'string')) {
-            return next(ApiError.BadRequest('Неверный запрос'));
+            return next(ApiError.BadRequest('Wrong query'));
          }
          const users = await ToolsService.getUsers(_id);
          return response.json(users);
@@ -91,7 +90,7 @@ export default class ToolsController {
          const { _id, roles } = request.body;
 
          if (!_id || !roles.length || _id === (<Payload>request.user)?._id) {
-            return next(ApiError.BadRequest('Неверный запрос'));
+            return next(ApiError.BadRequest('Wrong query'));
          }
          const result = await ToolsService.updateRoles(_id, roles);
          return response.json(result);

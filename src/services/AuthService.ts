@@ -11,10 +11,10 @@ import RestoreModel from '@/models/RestoreModel'
 export default class AuthService {
 
    static async registration(email: string, password: string, name: string) {
-      const candidate = await UserModel.findOne({ email });
+      const candidate = await UserModel.findOne({ email }).lean();
 
       if (candidate) {
-         throw ApiError.BadRequest(`Пользователь с таким email уже существует!`, ['email']);
+         throw ApiError.BadRequest(`This email address already taken`, ['email']);
       }
 
       const hashPassword: string = await bcrypt.hash(password, 5);
@@ -36,7 +36,7 @@ export default class AuthService {
       const user = await UserModel.findOne({ activationLink });
 
       if (!user) {
-         throw ApiError.BadRequest(`Неккоректная ссылка активации!`);
+         throw ApiError.BadRequest(`Activation link is incorrect`);
       }
 
       user.isActivated = true;
@@ -44,16 +44,16 @@ export default class AuthService {
    }
 
    static async login(email: string, password: string) {
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ email }).lean();
 
       if (!user) {
-         throw ApiError.BadRequest(`Неверный email!`, ['email']);
+         throw ApiError.BadRequest(`Incorrect email`, ['email']);
       }
 
       const isPasswordsEqual = await bcrypt.compare(password, user.password);
 
       if (!isPasswordsEqual) {
-         throw ApiError.BadRequest(`Неверный пароль!`, ['password']);
+         throw ApiError.BadRequest(`Incorrect password`, ['password']);
       }
 
       const userDto = new UserDto(user);
@@ -85,7 +85,7 @@ export default class AuthService {
       const user = await UserModel.findById(userData._id);
 
       if (!user) {
-         throw ApiError.BadRequest(`Пользователь не найден!`);
+         throw ApiError.BadRequest(`User not found`);
       }
 
       const userDto = new UserDto(user);
@@ -98,10 +98,10 @@ export default class AuthService {
 
    static async restorePassword(email: string) {
       const link = v4();
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ email }).lean();
 
       if (!user) {
-         throw ApiError.BadRequest(`Неверный email!`, ['email']);
+         throw ApiError.BadRequest(`Incorrect email`, ['email']);
       }
 
       const restoreData = await RestoreModel.findOne({ user: user._id });
@@ -116,35 +116,32 @@ export default class AuthService {
       }
 
       await MailService.sendRestoreMail(email, `${process.env.SERVER_URL}/restore?link=${link}`)
-         .catch(e => console.log(e.message));
+         .catch(e => {
+           throw ApiError.BadRequest(`Message sending error`);
+         });
 
-      return `На ваш адрес ${email} отправлено письмо со ссылкой. Перейдите по ней для смены пароля.`;
+      return { message: `Link was sent to email` };
    }
 
    static async setNewRestoredPassword(password: string, link: string) {
       const restoreData = await RestoreModel.findOne({ restoreLink: link });
+      const date = new Date();
 
-      if (!restoreData) {
-         throw ApiError.BadRequest('Срок действия ссылки истек.');
-      }
-
-      const date = new Date;
-
-      if ((+date - +restoreData.createdAt) > 6048e5) {
-         throw ApiError.BadRequest('Срок действия ссылки истек.');
+      if (!restoreData || (+date - +restoreData.createdAt > 6048e5)) {
+         throw ApiError.BadRequest('Link expired');
       }
 
       const hashPassword: string = await bcrypt.hash(password, 5);
       const userData = await UserModel.findById(restoreData.user);
 
       if (!userData) {
-         throw ApiError.BadRequest('Срок действия ссылки истек.');
+         throw ApiError.BadRequest('Link expired');
       }
-      
+
       userData.password = hashPassword;
       await userData.save();
       await restoreData.delete();
 
-      return 'Пароль изменен. Используйте его для входа.';
+      return { message: 'Password was changed' }
    }
 }

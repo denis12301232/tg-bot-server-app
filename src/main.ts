@@ -7,6 +7,7 @@ import router from '@/router/index'
 import ErrorMiddleware from '@/middlewares/ErrorMiddleware'
 import cookieParser from 'cookie-parser'
 import { resolve } from 'path'
+import { CreateRoot } from '@/libs/CreateRoot'
 
 
 config();
@@ -25,6 +26,7 @@ app.use(ErrorMiddleware);
 const start = async () => {
    try {
       await mongoose.connect(process.env.DB_URL, { dbName: process.env.DB_NAME });
+      await CreateRoot();
       app.listen(PORT, (): void => console.log(`Server started on ${PORT} port`));
    } catch (e) {
       if (e instanceof Error) console.log(e.message);

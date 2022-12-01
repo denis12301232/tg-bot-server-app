@@ -4,6 +4,7 @@ import Constants from '@/libs/Constants'
 import { AnyObject, AssistanceForm } from '@/interfaces/interfaces'
 import ApiError from '@/exeptions/ApiError'
 import ToolsModel from '@/models/ToolsModel'
+import { LeanDocument, Types } from 'mongoose'
 
 
 
@@ -15,7 +16,7 @@ export default class AssistanceService {
    }
 
    static async sendAssistanceForm(surname: string, name: string, patronymic: string) {
-      const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 });
+      const form = await AssistanceModel.find({ name, surname, patronymic }, { __v: 0 }).lean();
       if (!form.length) {
          throw ApiError.BadRequest(`Увы, ничего не найдено по запросу ${surname} ${name} ${patronymic}`);
       }
@@ -26,7 +27,8 @@ export default class AssistanceService {
       const skip = (page - 1) * limit;
       const humansList = await AssistanceModel.find({}, { name: 1, surname: 1, patronymic: 1, _id: 1 })
          .skip(skip)
-         .limit(limit);
+         .limit(limit)
+         .lean();
 
       const count = await AssistanceModel.count();
       return { humansList, count };
@@ -50,12 +52,26 @@ export default class AssistanceService {
          return { message: 'Интеграция не настроена!', link: `` };
       }
 
-      const forms = (await AssistanceModel.find())
-         .filter((item) => {
-            return item.district === filters.district
-               &&
-               (+item.birth.split('-')[0] >= +filters.birth.from && +item.birth.split('-')[0] <= +filters.birth.to)
-         });
+      let forms: LeanDocument<AssistanceForm & { _id: Types.ObjectId; }>[] = [];
+
+      if (filters.district && filters.birth.from && filters.birth.to) {
+         forms = (await AssistanceModel.find().lean())
+            .filter((item) => {
+               return item.district === filters.district
+                  &&
+                  (+item.birth.split('-')[0] >= +filters.birth.from && +item.birth.split('-')[0] <= +filters.birth.to)
+            });
+      } else if (filters.district) {
+         forms = (await AssistanceModel.find().lean())
+            .filter((item) => {
+               return item.district === filters.district;
+            });
+      } else if (filters.birth.from && filters.birth.to) {
+         forms = (await AssistanceModel.find().lean())
+            .filter((item) => {
+               return (+item.birth.split('-')[0] >= +filters.birth.from && +item.birth.split('-')[0] <= +filters.birth.to);
+            });
+      }
 
       if (!forms.length) throw ApiError.BadRequest('Увы, ничего не найдено по запросу!');
 
@@ -95,5 +111,10 @@ export default class AssistanceService {
          message: 'Успешно сформировано!',
          link: `https://docs.google.com/spreadsheets/d/${api[0].api.google.service.sheetId}`
       };
+   }
+
+   static async getFormById(id: string) {
+      const form = await AssistanceModel.findById(id, { __v: 0, _id: 0 }).lean();
+      return form;
    }
 }

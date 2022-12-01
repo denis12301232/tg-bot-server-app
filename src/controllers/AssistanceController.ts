@@ -6,11 +6,9 @@ import AssistanceFormDto from '@/dtos/AssistanceFormDto'
 
 
 export default class AssistanceController {
-
    static async catchAssistaceForm(request: Request, response: Response, next: NextFunction) {
       try {
          const saved = await AssistanceService.catchAssistaceForm(request.body.form)
-
          return response.json({ message: 'Успешно сохранено!', saved });
       } catch (e) {
          next(e);
@@ -26,7 +24,6 @@ export default class AssistanceController {
          }
 
          const forms = await AssistanceService.sendAssistanceForm(surname, name, patronymic);
-
          return response.json(new AssistanceFormDto(forms));
       } catch (e) {
          next(e);
@@ -39,8 +36,7 @@ export default class AssistanceController {
          if (!limit || !page) {
             return next(ApiError.BadRequest('Неверный запрос!'));
          }
-         const { humansList, count } = await AssistanceService.sendHumansList({ limit, page });
-
+         const { humansList, count } = await AssistanceService.sendHumansList({ limit: Number(limit), page: Number(page) });
          return response.set('X-Total-Count', count.toString()).json(new HumansListDto(humansList));
       } catch (e) {
          next(e);
@@ -54,7 +50,6 @@ export default class AssistanceController {
             return next(ApiError.BadRequest('Отсутствует тело запроса!'));
          }
          const deleteResult = await AssistanceService.deleteHuman(id);
-
          return response.json(deleteResult);
       } catch (e) {
          next(e);
@@ -68,7 +63,6 @@ export default class AssistanceController {
             return next(ApiError.BadRequest('Отсутсвует тело запроса!'));
          }
          const updateResult = await AssistanceService.modifyAssistanceForm(id, form);
-
          return response.json(updateResult);
       } catch (e) {
          next(e);
@@ -84,6 +78,22 @@ export default class AssistanceController {
          }
          const result = await AssistanceService.saveFormsToSheet(request.body);
          return response.json(result)
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   static async getFormById(request: Request, response: Response, next: NextFunction) {
+      try {
+         const { id } = request.query;
+
+         if (!id || !(typeof id === 'string')) {
+            return next(ApiError.BadRequest('Неверный запрос!'));
+         }
+
+         const form = await AssistanceService.getFormById(id);
+
+         return response.json(form);
       } catch (e) {
          next(e);
       }

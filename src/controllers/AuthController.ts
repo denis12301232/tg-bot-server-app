@@ -96,7 +96,7 @@ export default class AuthController {
          const { email } = request.body;
          const message = await AuthService.restorePassword(email);
 
-         return response.json({ message });
+         return response.json(message);
 
       } catch (e) {
          next(e);
@@ -108,14 +108,12 @@ export default class AuthController {
          const errors = validationResult(request);
 
          if (!errors.isEmpty()) {
-            return next(ApiError.BadRequest('Ошибка валидации!', errors.array()));
+            return next(ApiError.BadRequest('Validation error', errors.array()));
          }
 
          const { password, link } = request.body;
          const message = await AuthService.setNewRestoredPassword(password, link);
-
-         return response.json({ message });
-
+         return response.json(message);
       } catch (e) {
          next(e);
       }

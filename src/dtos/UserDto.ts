@@ -1,4 +1,4 @@
-import { Document } from 'mongoose'
+import { LeanDocument, Types } from 'mongoose'
 import { IUser } from '@/interfaces/interfaces'
 
 export default class UserDto {
@@ -8,9 +8,9 @@ export default class UserDto {
     readonly name: string;
     readonly roles: string[];
 
-    constructor(model: Document<any, any, IUser> & IUser) {
+    constructor(model: LeanDocument<IUser & { _id: Types.ObjectId }>) {
         this.email = model.email;
-        this._id = model._id;
+        this._id = model._id.toString();
         this.isActivated = model.isActivated;
         this.name = model.name;
         this.roles = model.roles;

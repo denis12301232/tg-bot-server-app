@@ -10,10 +10,10 @@ export default class ImagesController {
          const { pageToken } = request.query;
 
          if (typeof pageToken !== 'undefined' && typeof pageToken !== 'string') {
-            return next(ApiError.BadRequest('Ошибка запроса!'));
+            return next(ApiError.BadRequest('Wrong query'));
          }
 
-         const api = await ToolsModel.find().limit(1);
+         const api = await ToolsModel.find().limit(1).lean();
          const auth = new google.auth.GoogleAuth({
             credentials: {
                client_email: api[0].api.google.service.user,
@@ -27,7 +27,7 @@ export default class ImagesController {
             q: `'${api[0].api.google.service.folderId}' in parents and trashed=false 
             and (mimeType=\'image/png\' or mimeType=\'image/jpeg\')`,
             pageSize: 20,
-            pageToken
+            pageToken,
          });
          const nextPageToken = list?.data?.nextPageToken || undefined;
          const images = list.data.files?.map(item => {
