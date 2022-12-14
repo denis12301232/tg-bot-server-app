@@ -1,11 +1,11 @@
 export default class Constants {
 
    static readonly assistance = {
-      name: {
-         display: 'Имя',
-      },
       surname: {
          display: 'Фамилия',
+      },
+      name: {
+         display: 'Имя',
       },
       patronymic: {
          display: 'Отчество',

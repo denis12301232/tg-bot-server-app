@@ -13,6 +13,10 @@ export default class Validate {
       return /^\+380([0-9]{9})$/.test(value);
    }
 
+   static is10NumbersPhone(value: string) {
+      return /^0([0-9]{9})$/.test(value);
+   }
+
    static isValidDistrict(value: string) {
       return Constants.districts.includes(value);
    }

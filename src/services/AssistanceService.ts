@@ -69,7 +69,7 @@ export default class AssistanceService {
       } else if (filters.birth.from && filters.birth.to) {
          forms = (await AssistanceModel.find().lean())
             .filter((item) => {
-               return (+item.birth.split('-')[0] >= +filters.birth.from && +item.birth.split('-')[0] <= +filters.birth.to);
+               return (+item.birth.split('.')[0] >= +filters.birth.from && +item.birth.split('.')[0] <= +filters.birth.to);
             });
       }
 

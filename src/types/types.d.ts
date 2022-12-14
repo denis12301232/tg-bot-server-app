@@ -15,5 +15,7 @@ declare namespace NodeJS {
       readonly JWT_REFRESH_SECRET: string;
       readonly GOOGLE_USER: string;
       readonly GOOGLE_APP_PASS: string;
+      readonly BOT_TOKEN: string;
+      readonly SERVER_DOMAIN: string;
    }
 }

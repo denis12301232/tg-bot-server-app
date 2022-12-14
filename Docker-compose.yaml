@@ -11,6 +11,7 @@ services:
     container_name: tg
     ports:
       - "80:5000"
+      - "443:5000"
     links:
       - mongo
     env_file:
