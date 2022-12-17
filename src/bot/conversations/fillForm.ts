@@ -65,7 +65,8 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       // ВОЗРАСТ ДЕТЕЙ
       if (conversation.session.form.children === 'Да') {
          conversation.session.form.children_age = [];
-         const markup = { ...Keyboards.children_age_markup };
+         const markup = JSON.parse(JSON.stringify(Keyboards.children_age_markup));
+         //const markup = { ...Keyboards.children_age_markup };
          await ctx.reply('<b>Укажите возраст детей:</b>', { reply_markup: markup, parse_mode: 'HTML' });
          let children_age;
          while (true) {
