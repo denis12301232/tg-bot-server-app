@@ -171,7 +171,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
                   () => { ctx.reply('Сохранено', { reply_markup: Keyboards.start_keyboard }) },
                   (e) => {
                      ctx.reply(e.message);
-                     ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard });
+                     ctx.reply('Ошибка! Заявка не сохранена. Попробуйте снова.', { reply_markup: Keyboards.start_keyboard });
                   }
                );
             return;
