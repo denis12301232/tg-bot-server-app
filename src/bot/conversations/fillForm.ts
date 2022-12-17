@@ -59,7 +59,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       const invalids = await conversation.waitForHears(['Да', 'Нет']);
       conversation.session.form.invalids = invalids.match as string;
       // ДЕТИ
-      await ctx.reply('<b>Есть ли дети?</b>', { reply_markup: Keyboards.yes_no_keyboard });
+      await ctx.reply('<b>Есть ли дети?</b>', { reply_markup: Keyboards.yes_no_keyboard, parse_mode: 'HTML' });
       const children = await conversation.waitForHears(['Да', 'Нет']);
       conversation.session.form.children = children.match as string;
       // ВОЗРАСТ ДЕТЕЙ
@@ -112,7 +112,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
          }
 
          await children_age.editMessageReplyMarkup();
-         await ctx.reply(conversation.session.form.children_age.join(', '));
+         await ctx.reply(`Выбрано: ${conversation.session.form.children_age.join(', ')}`);
       }
       // ПРОДУКТЫ ПИТАНИЯ
       await ctx.reply('<b>Нужны ли продукты питания?</b>', { reply_markup: Keyboards.yes_no_keyboard, parse_mode: 'HTML' });
@@ -170,8 +170,8 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
                .then(
                   () => { ctx.reply('Сохранено', { reply_markup: Keyboards.start_keyboard }) },
                   (e) => {
+                     ctx.reply(e.message);
                      ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard });
-                     ctx.reply(e);
                   }
                );
             return;
@@ -180,7 +180,11 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
             return;
       }
    } catch (e) {
-      if (e instanceof Error) ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard });
+      if (e instanceof Error) {
+         ctx.reply(e.message);
+         ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard })
+      };
+
       return;
    }
 }
