@@ -4,11 +4,6 @@ import { config } from 'dotenv'
 config();
 
 export default class Keyboards {
-   static readonly children_age_markup = new InlineKeyboard()
-      .text('от 0 до 1', '0-1').text('от 1 до 3', '1-3').row()
-      .text('от 3 до 9', '3-9').text('от 9 до 18', '9-18').row()
-      .text('Ok', 'Ok');
-
    static readonly start_keyboard = new Keyboard()
       .text('Как пользоваться').row()
       .text('Внести данные').webApp('Заполнить форму', process.env.SERVER_DOMAIN).resized().oneTime();
