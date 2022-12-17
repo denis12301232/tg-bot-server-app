@@ -55,7 +55,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
          }
       }
       // ИНВАЛИДЫ
-      await ctx.reply('<b>Есть ли среди проживающих инвалиды?</b>', { reply_markup: Keyboards.yes_no_keyboard });
+      await ctx.reply('<b>Есть ли среди проживающих инвалиды?</b>', { reply_markup: Keyboards.yes_no_keyboard, parse_mode: 'HTML' });
       const invalids = await conversation.waitForHears(['Да', 'Нет']);
       conversation.session.form.invalids = invalids.match as string;
       // ДЕТИ
@@ -66,7 +66,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       if (conversation.session.form.children === 'Да') {
          conversation.session.form.children_age = [];
          const markup = { ...Keyboards.children_age_markup };
-         await ctx.reply('<b>Укажите возраст детей:</b>', { reply_markup: markup });
+         await ctx.reply('<b>Укажите возраст детей:</b>', { reply_markup: markup, parse_mode: 'HTML' });
          let children_age;
          while (true) {
             children_age = await conversation.waitFor('callback_query:data');
@@ -119,7 +119,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       const food = await conversation.waitForHears(['Да', 'Нет']);
       conversation.session.form.food = food.match as string;
       // ВОДА
-      await ctx.reply('<b>Нужна ли вода?</b>', { reply_markup: Keyboards.yes_no_keyboard, parse_mode: 'HTML'});
+      await ctx.reply('<b>Нужна ли вода?</b>', { reply_markup: Keyboards.yes_no_keyboard, parse_mode: 'HTML' });
       const water = await conversation.waitForHears(['Да', 'Нет']);
       conversation.session.form.water = water.match as string;
       // ЛЕКАРСТВА
@@ -169,7 +169,10 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
             await conversation.external(() => ApiCalls.saveForm(conversation.session.form))
                .then(
                   () => { ctx.reply('Сохранено', { reply_markup: Keyboards.start_keyboard }) },
-                  (e) => { ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard }) }
+                  (e) => {
+                     ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard });
+                     ctx.reply(e);
+                  }
                );
             return;
          case 'Вернутся назад':
