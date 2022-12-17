@@ -66,11 +66,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       // ВОЗРАСТ ДЕТЕЙ
       if (conversation.session.form.children === 'Да') {
          conversation.session.form.children_age = [];
-         const markup = new InlineKeyboard()
-            .text('от 0 до 1', '0-1').text('от 1 до 3', '1-3').row()
-            .text('от 3 до 9', '3-9').text('от 9 до 18', '9-18').row()
-            .text('Ok', 'Ok');
-
+         const markup = JSON.parse(JSON.stringify(Keyboards.children_age_markup));
          await ctx.reply('<b>Укажите возраст детей:</b>', { reply_markup: markup, parse_mode: 'HTML' });
          let children_age;
          while (true) {
