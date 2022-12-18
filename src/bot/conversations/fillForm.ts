@@ -6,6 +6,7 @@ import ApiCalls from "@/bot/api/ApiCalls"
 import { showForm } from "@/bot/util/showForm"
 import Keyboards from "@/bot/keyboards/Keyboards"
 import { InlineKeyboard } from "grammy"
+import { deepCopy } from '@/bot/util/deepCopy'
 
 export async function fillForm(conversation: MyConversation, ctx: MyContext) {
    try {
@@ -66,12 +67,14 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       // ВОЗРАСТ ДЕТЕЙ
       if (conversation.session.form.children === 'Да') {
          conversation.session.form.children_age = [];
-         const markup = JSON.parse(JSON.stringify(Keyboards.children_age_markup));
+         let markup = deepCopy<InlineKeyboard>(Keyboards.children_age_markup);
          await ctx.reply('<b>Укажите возраст детей:</b>', { reply_markup: markup, parse_mode: 'HTML' });
-         let children_age;
          while (true) {
-            children_age = await conversation.waitFor('callback_query:data');
-            if (children_age.update.callback_query.data === 'Ok') break;
+            const children_age = await conversation.waitFor('callback_query:data');
+            if (children_age.update.callback_query.data === 'Ok') {
+               await children_age.editMessageReplyMarkup();
+               break;
+            }
             const age = children_age.update.callback_query.data;
             if (conversation.session.form.children_age.includes(age)) {
                const index = conversation.session.form.children_age.indexOf(age);
@@ -90,7 +93,6 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
                      markup.inline_keyboard[1][1].text = `от ${age.split('-')[0]} до ${age.split('-')[1]}`;
                      break;
                }
-               await children_age.editMessageReplyMarkup({ reply_markup: markup });
             } else {
                conversation.session.form.children_age = [...conversation.session.form.children_age, age];
                switch (age) {
@@ -107,12 +109,11 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
                      markup.inline_keyboard[1][1].text = '\u2705 ' + age;
                      break;
                }
-               await children_age.editMessageReplyMarkup({ reply_markup: markup });
             }
-            await conversation.skip();
+            const newMarkup = await children_age.editMessageReplyMarkup({ reply_markup: markup });
+            markup = (newMarkup as any).reply_markup;
+            await children_age.answerCallbackQuery();   
          }
-
-         await children_age.editMessageReplyMarkup();
          await ctx.reply(`Выбрано: ${conversation.session.form.children_age.join(', ')}`);
       }
       // ПРОДУКТЫ ПИТАНИЯ
@@ -184,8 +185,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
       if (e instanceof Error) {
          ctx.reply(e.message);
          ctx.reply('Произошла ошибка', { reply_markup: Keyboards.start_keyboard })
-      };
-
+      }
       return;
    }
 }
