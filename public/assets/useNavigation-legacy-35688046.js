@@ -1,0 +1,1 @@
+System.register(["./vue-router-legacy-1eca3dbd.js"],(function(t,e){"use strict";var n;return{setters:[t=>{n=t.u}],execute:function(){t("u",(function(){const t=n();return{goBack:function(){window.history.length>2?t.back():t.push("/")}}}))}}}));

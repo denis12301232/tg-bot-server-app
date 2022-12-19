@@ -1,1 +1,0 @@
-System.register(["./index-legacy-39c22bb2.js"],(function(t,e){"use strict";var n;return{setters:[t=>{n=t.t}],execute:function(){t("u",(function(){const t=n();return{goBack:function(){window.history.length>2?t.back():t.push("/")}}}))}}}));
