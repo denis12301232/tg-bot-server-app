@@ -15,4 +15,4 @@ services:
     links:
       - mongo
     env_file:
-      - .env.local
+      - .env.production

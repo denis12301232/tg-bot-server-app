@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import UserDto from '@/dtos/UserDto'
 import TokenModel from '@/models/TokenModel'
 
+
 export default class TokenService {
    static generateTokens(payload: UserDto) {
       const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });

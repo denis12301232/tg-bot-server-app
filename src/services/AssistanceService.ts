@@ -7,7 +7,6 @@ import ToolsModel from '@/models/ToolsModel'
 import { LeanDocument, Types } from 'mongoose'
 
 
-
 export default class AssistanceService {
    static async catchAssistaceForm(form: AssistanceForm) {
       const saved = await AssistanceModel.create(form)

@@ -1,7 +1,4 @@
 import { Keyboard, InlineKeyboard } from 'grammy'
-import { config } from 'dotenv'
-
-config();
 
 export default class Keyboards {
    static readonly children_age_markup = new InlineKeyboard()

@@ -9,7 +9,6 @@ import RestoreModel from '@/models/RestoreModel'
 
 
 export default class AuthService {
-
    static async registration(email: string, password: string, name: string) {
       const candidate = await UserModel.findOne({ email }).lean();
 

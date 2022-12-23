@@ -1,12 +1,10 @@
 import { Bot, session, Context, } from 'grammy'
-import { config } from 'dotenv'
 import Commands from '@/bot/commands/Commands'
 import { MyContext } from './types'
 import BotApi from '@/bot/api/BotApi'
 import { conversations, createConversation } from '@grammyjs/conversations'
 import { fillForm } from '@/bot/conversations/fillForm'
 
-config();
 
 export const bot = new Bot<MyContext>(process.env.BOT_TOKEN);
 
