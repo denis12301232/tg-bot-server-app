@@ -4,7 +4,7 @@ import Constants from '@/libs/Constants'
 import { AnyObject, AssistanceForm } from '@/interfaces/interfaces'
 import ApiError from '@/exeptions/ApiError'
 import ToolsModel from '@/models/ToolsModel'
-import { LeanDocument, Types } from 'mongoose'
+import { FilterQuery } from 'mongoose'
 
 
 export default class AssistanceService {
@@ -44,33 +44,31 @@ export default class AssistanceService {
       return updateResult;
    }
 
-   static async saveFormsToSheet(filters: any) {
+   static async saveFormsToSheet(filters: { district: string, birth: { from: string, to: string } }) {
       const api = await ToolsModel.find().limit(1);
 
       if (!api.length) {
          return { message: 'Интеграция не настроена!', link: `` };
       }
+      const conditions: FilterQuery<AssistanceForm>[] = [];
 
-      let forms: LeanDocument<AssistanceForm & { _id: Types.ObjectId; }>[] = [];
-
-      if (filters.district && filters.birth.from && filters.birth.to) {
-         forms = (await AssistanceModel.find().lean())
-            .filter((item) => {
-               return item.district === filters.district
-                  &&
-                  (+item.birth.split('-')[0] >= +filters.birth.from && +item.birth.split('-')[0] <= +filters.birth.to)
-            });
-      } else if (filters.district) {
-         forms = (await AssistanceModel.find().lean())
-            .filter((item) => {
-               return item.district === filters.district;
-            });
-      } else if (filters.birth.from && filters.birth.to) {
-         forms = (await AssistanceModel.find().lean())
-            .filter((item) => {
-               return (+item.birth.split('.')[0] >= +filters.birth.from && +item.birth.split('.')[0] <= +filters.birth.to);
-            });
+      if (filters.district) {
+         conditions.push({ district: filters.district });
       }
+      if (filters.birth.from && filters.birth.to) {
+         conditions.push({
+            $expr: {
+               $function: {
+                  body: "function (birth, filters) { return +birth.split('.')[0] >= +filters.birth.from && +birth.split('.')[0] <= +filters.birth.to }",
+                  args: ["$birth", filters],
+                  lang: "js"
+               }
+            },
+         });
+      }
+
+      const finalCondition = conditions.length ? { $and: conditions } : {};
+      const forms = await AssistanceModel.find(finalCondition).lean();
 
       if (!forms.length) throw ApiError.BadRequest('Увы, ничего не найдено по запросу!');
 

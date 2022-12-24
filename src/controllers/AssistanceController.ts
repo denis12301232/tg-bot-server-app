@@ -77,7 +77,7 @@ export default class AssistanceController {
             return next(ApiError.BadRequest('Неверный запрос!'));
          }
          const result = await AssistanceService.saveFormsToSheet(request.body);
-         return response.json(result)
+         return response.json(result);
       } catch (e) {
          next(e);
       }
