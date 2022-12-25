@@ -1,7 +1,7 @@
-import { CommandContext, Context, HearsContext } from 'grammy'
+import { CommandContext, HearsContext } from 'grammy'
 import { MyContext } from '../types';
 import Keyboards from '@/bot/keyboards/Keyboards'
-import { exitAllConversations } from '@/bot/util/exitAllConversations'
+import { exitAllConversations } from '../util/exitAllConversations';
 
 export default class Commands {
    static async start(ctx: CommandContext<MyContext>) {
@@ -18,7 +18,8 @@ export default class Commands {
       }
    }
 
-   static howToUse(ctx: HearsContext<MyContext>) {
+   static async howToUse(ctx: HearsContext<MyContext>) {
+      await exitAllConversations(ctx);
       const text = `Чтобы оставить заявку на получение гуманитарной помощи, выберите один из вариантов:\n
 1. "Внести данные" - здесь вам предстоит последовательно ответить на список вопросов.
 2. "Заполнить форму" - более удобный способ заполнения заявки (Может не работать на некоторых устройстах).

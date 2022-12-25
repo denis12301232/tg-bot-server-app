@@ -1,4 +1,4 @@
-import { Context, InlineKeyboard, Keyboard } from 'grammy'
+import { Context } from 'grammy'
 import { SessionData, MyContext, MyConversation, ConversationQuestionWithValidators } from '../types'
 
 export default class BotApi {
@@ -32,7 +32,7 @@ export default class BotApi {
             diet: '-',
             pers_data_agreement: true,
             photo_agreement: true,
-         }
+         },
       }
    };
 

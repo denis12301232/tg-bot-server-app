@@ -32,15 +32,15 @@ export interface AssistanceForm {
    pers_data_agreement: boolean;
    photo_agreement: boolean;
 }
-export interface SessionData { 
+export interface SessionData {
    form: AssistanceForm;
 }
 export type MyContext = Context & SessionFlavor<SessionData> & ConversationFlavor;
 export type MyConversation = Conversation<MyContext>;
 
 export interface ConversationQuestionWithValidators {
-   question: string; 
+   question: string;
    conversation: MyConversation;
-   ctx: MyContext; 
+   ctx: MyContext;
    validators: Function[];
 }

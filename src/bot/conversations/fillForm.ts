@@ -112,7 +112,7 @@ export async function fillForm(conversation: MyConversation, ctx: MyContext) {
             }
             const newMarkup = await children_age.editMessageReplyMarkup({ reply_markup: markup });
             markup = (newMarkup as any).reply_markup;
-            await children_age.answerCallbackQuery();   
+            await children_age.answerCallbackQuery();
          }
          await ctx.reply(`Выбрано: ${conversation.session.form.children_age.join(', ')}`);
       }
