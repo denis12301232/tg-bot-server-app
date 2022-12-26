@@ -8,6 +8,11 @@ export interface StringObject {
    [name: string]: string;
 }
 
+export interface GoogleSheetsFilters {
+   district: string;
+   birth: { from: string, to: string }
+}
+
 export interface Payload {
    readonly email: string;
    readonly _id: string;

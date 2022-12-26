@@ -92,7 +92,6 @@ export default class AssistanceController {
          }
 
          const form = await AssistanceService.getFormById(id);
-
          return response.json(form);
       } catch (e) {
          next(e);

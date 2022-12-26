@@ -1,10 +1,10 @@
 import AssistanceModel from '@/models/AssistanceModel'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import Constants from '@/libs/Constants'
-import { AnyObject, AssistanceForm } from '@/interfaces/interfaces'
 import ApiError from '@/exeptions/ApiError'
 import ToolsModel from '@/models/ToolsModel'
-import { FilterQuery } from 'mongoose'
+import { type FilterQuery } from 'mongoose'
+import type { AnyObject, AssistanceForm, GoogleSheetsFilters } from '@/interfaces/interfaces'
 
 
 export default class AssistanceService {
@@ -44,7 +44,7 @@ export default class AssistanceService {
       return updateResult;
    }
 
-   static async saveFormsToSheet(filters: { district: string, birth: { from: string, to: string } }) {
+   static async saveFormsToSheet(filters: GoogleSheetsFilters) {
       const api = await ToolsModel.find().limit(1);
 
       if (!api.length) {
