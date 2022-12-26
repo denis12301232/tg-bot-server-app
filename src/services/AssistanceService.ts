@@ -55,7 +55,7 @@ export default class AssistanceService {
       if (filters.district) {
          conditions.push({ district: filters.district });
       }
-      if (filters.birth.from && filters.birth.to) {
+      if (filters.birth?.from && filters.birth?.to) {
          conditions.push({
             $expr: {
                $function: {
